@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PsychoSite.Api.Domain;
+namespace LawyerSite.Api.Domain;
 
 /// <summary>
 /// Услуга психолога

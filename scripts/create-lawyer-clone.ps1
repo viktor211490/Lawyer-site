@@ -25,9 +25,9 @@ function Copy-RepoTree {
   )
 
   $excludeFiles = @(
-    "psycho-site.db",
-    "psycho-site.db-shm",
-    "psycho-site.db-wal"
+    "lawyer-site.db",
+    "lawyer-site.db-shm",
+    "lawyer-site.db-wal"
   )
 
   New-Item -ItemType Directory -Force -Path $DestRoot | Out-Null
@@ -67,7 +67,7 @@ try {
 
   git init | Out-Null
   git add -A | Out-Null
-  git commit -m "Initial import from Psycho-site" | Out-Null
+  git commit -m "Initial import from Lawyer-site" | Out-Null
 
   Write-Host "Done. Next steps:"
   Write-Host " - Review README and branding"

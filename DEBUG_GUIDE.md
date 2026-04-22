@@ -1,4 +1,4 @@
-# Руководство по отладке PsychoSite
+# Руководство по отладке LawyerSite
 
 ## 🔧 Настройка отладки
 
@@ -6,7 +6,7 @@
 
 **Отладка в VS Code:**
 1. Откройте файл `launch.json`
-2. Выберите конфигурацию "Backend: PsychoSite.Api"
+2. Выберите конфигурацию "Backend: LawyerSite.Api"
 3. Нажмите F5 для запуска с отладкой
 
 **Точки останова:**
@@ -21,7 +21,7 @@
 ### Frontend (Angular)
 
 **Отладка в VS Code:**
-1. Выберите конфигурацию "Frontend: PsychoSite.Web"
+1. Выберите конфигурацию "Frontend: LawyerSite.Web"
 2. Нажмите F5
 3. Отладчик подключится к Chrome
 
@@ -52,11 +52,11 @@ F12 → Application → Local Storage - токен аутентификации
 
 **Примеры логов:**
 ```
-info: PsychoSite.Api.Controllers.BlockedSlotsController[0]
+info: LawyerSite.Api.Controllers.BlockedSlotsController[0]
       GetByRange: start=2026-02-22T21:00:00.000Z, end=2026-04-05T20:59:59.999Z
-info: PsychoSite.Api.Controllers.BlockedSlotsController[0]
+info: LawyerSite.Api.Controllers.BlockedSlotsController[0]
       Parsed dates: 2026-02-23 to 2026-04-06
-info: PsychoSite.Api.Controllers.BlockedSlotsController[0]
+info: LawyerSite.Api.Controllers.BlockedSlotsController[0]
       Found 0 blocked slots
 ```
 
@@ -162,11 +162,11 @@ this.http.get<TimeSlot[]>(...).subscribe({
 
 ```bash
 # Терминал 1 - Backend с отладкой
-cd src/PsychoSite.Api
+cd src/LawyerSite.Api
 dotnet run
 
 # Терминал 2 - Frontend
-cd src/PsychoSite.Web
+cd src/LawyerSite.Web
 npm run start
 
 # Браузер
@@ -205,7 +205,7 @@ Authorization: Bearer {token}
 
 1. Проверьте запрос в Network tab
 2. Проверьте backend логи
-3. Проверьте базу данных (psycho-site.db)
+3. Проверьте базу данных (lawyer-site.db)
 
 ### Блокировка не создаётся
 

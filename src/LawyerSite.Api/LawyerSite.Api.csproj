@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     
     <!-- SPA Proxy Settings -->
-    <SpaRoot>..\PsychoSite.Web</SpaRoot>
+    <SpaRoot>..\LawyerSite.Web</SpaRoot>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:4200</SpaProxyServerUrl>
   </PropertyGroup>

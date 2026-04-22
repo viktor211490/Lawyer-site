@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
 
-namespace PsychoSite.Api.Services;
+namespace LawyerSite.Api.Services;
 
 public interface IAppointmentService
 {
@@ -100,8 +100,8 @@ public class AppointmentService : IAppointmentService
             while (slotStartTime < workEndTime)
             {
                 // Блокируем слоты которые уже прошли (в московском времени)
-                var slotLocalMoscow = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotStartTime);
-                var moscowNow = PsychoSite.Api.Time.MoscowTimeProvider.GetMoscowNow();
+                var slotLocalMoscow = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotStartTime);
+                var moscowNow = LawyerSite.Api.Time.MoscowTimeProvider.GetMoscowNow();
                 var isPast = slotLocalMoscow < moscowNow;
 
                 // Для каждого слота проверяем, можно ли записать услугу выбранной длительности
@@ -143,7 +143,7 @@ public class AppointmentService : IAppointmentService
 
                     slots.Add(new Appointment
                     {
-                        AppointmentTime = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotStartTime), // Moscow-local time
+                        AppointmentTime = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotStartTime), // Moscow-local time
                         Status = (isTaken || isBlocked) ? AppointmentStatus.Confirmed : AppointmentStatus.Scheduled,
                         IsBlocked = isBlocked,
                         DurationMinutes = slotStep // Длительность слота (шаг)

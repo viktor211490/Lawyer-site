@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
-using PsychoSite.Api.DTOs;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
+using LawyerSite.Api.DTOs;
 
-namespace PsychoSite.Api.Services;
+namespace LawyerSite.Api.Services;
 
 public interface IWorkingHoursService
 {
@@ -212,8 +212,8 @@ public class WorkingHoursService : IWorkingHoursService
             var slotEnd = slotDateTime.AddMinutes(schedule.SlotDurationMinutes);
 
             // Блокируем слоты которые уже прошли (в московском времени)
-            var slotLocalMoscow = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotDateTime);
-            var moscowNow = PsychoSite.Api.Time.MoscowTimeProvider.GetMoscowNow();
+            var slotLocalMoscow = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(slotDateTime);
+            var moscowNow = LawyerSite.Api.Time.MoscowTimeProvider.GetMoscowNow();
             var isPast = slotLocalMoscow < moscowNow;
 
             // Проверка на пересечение с записью (с учётом перерыва после записи)

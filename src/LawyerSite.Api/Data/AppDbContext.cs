@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using PsychoSite.Api.Domain;
+using LawyerSite.Api.Domain;
 
-namespace PsychoSite.Api.Data;
+namespace LawyerSite.Api.Data;
 
 public class AppDbContext : DbContext
 {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace PsychoSite.Api.Data;
+namespace LawyerSite.Api.Data;
 
 /// <summary>
 /// Конвертер для хранения DateTime в UTC в SQLite
@@ -39,7 +39,7 @@ internal static class DateTimeConverterHelpers
         if (dt.Kind == DateTimeKind.Unspecified)
         {
             // Интерпретируем как московское локальное и конвертируем в UTC
-            var moscow = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(dt);
+            var moscow = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(dt);
             // Попытка найти московскую TZ, если не найдена - используем UTC (ConvertTimeToUtc will treat as UTC)
             try
             {
@@ -58,7 +58,7 @@ internal static class DateTimeConverterHelpers
     public static DateTime FromProvider(DateTime v)
     {
         // При чтении из БД v считается UTC
-        return PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        return LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(DateTime.SpecifyKind(v, DateTimeKind.Utc));
     }
 
     public static DateTime? ToProviderNullable(DateTime? v) => v.HasValue ? ToProvider(v.Value) : null;

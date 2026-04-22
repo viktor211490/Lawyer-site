@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PsychoSite.Api.Migrations
+namespace LawyerSite.Api.Migrations
 {
     /// <inheritdoc />
     public partial class AddServicesTable : Migration

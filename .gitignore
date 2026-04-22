@@ -1,23 +1,23 @@
 # .gitignore для ASP.NET Core и Angular
 
 # Backend
-src/PsychoSite.Api/bin/
-src/PsychoSite.Api/obj/
-src/PsychoSite.Api/*.db
-src/PsychoSite.Api/*.db-shm
-src/PsychoSite.Api/*.db-wal
-src/PsychoSite.Api/uploads/
-src/PsychoSite.Api/wwwroot/api/specification.json
+src/LawyerSite.Api/bin/
+src/LawyerSite.Api/obj/
+src/LawyerSite.Api/*.db
+src/LawyerSite.Api/*.db-shm
+src/LawyerSite.Api/*.db-wal
+src/LawyerSite.Api/uploads/
+src/LawyerSite.Api/wwwroot/api/specification.json
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
 # Frontend
-src/PsychoSite.Web/node_modules/
-src/PsychoSite.Web/dist/
-src/PsychoSite.Web/.angular/
-src/PsychoSite.Web/.vscode/
+src/LawyerSite.Web/node_modules/
+src/LawyerSite.Web/dist/
+src/LawyerSite.Web/.angular/
+src/LawyerSite.Web/.vscode/
 
 # Общие
 .vs/

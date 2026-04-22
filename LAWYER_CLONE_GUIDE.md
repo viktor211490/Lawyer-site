@@ -19,7 +19,7 @@ pwsh .\scripts\create-lawyer-clone.ps1 -DestinationPath "C:\Users\alexe\repos" -
 ## 2) Минимальный набор правок после клонирования (обязательное)
 
 ### Backend
-- **Секреты**: заменить `Jwt:SecretKey` в `src/PsychoSite.Api/appsettings.json` (и не хранить прод‑секреты в репо).
+- **Секреты**: заменить `Jwt:SecretKey` в `src/LawyerSite.Api/appsettings.json` (и не хранить прод‑секреты в репо).
 - **Админ‑доступ**: сменить дефолтный пароль админа (сейчас в `README.md` указан `admin/admin123`).
 - **База данных**: поменять имя файла БД (например, `lawyer-site.db`) и строку подключения.
 - **CORS/домены**: обновить `Cors:AllowedOrigins` под новый фронтенд‑домен.

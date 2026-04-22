@@ -1,4 +1,4 @@
-namespace PsychoSite.Api;
+namespace LawyerSite.Api;
 
 public class WeatherForecast
 {

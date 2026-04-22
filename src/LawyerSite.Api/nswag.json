@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": "PsychoSite.Api.csproj",
+      "project": "LawyerSite.Api.csproj",
       "documentName": "v1",
       "msBuildProjectExtensionsPath": null,
       "configuration": "$(Configuration)",
@@ -76,7 +76,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../PsychoSite.Web/src/app/services/client/web-api-client.ts",
+      "output": "../LawyerSite.Web/src/app/services/client/web-api-client.ts",
       "newLineBehavior": "Auto"
     }
   }

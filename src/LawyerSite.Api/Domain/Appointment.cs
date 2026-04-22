@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PsychoSite.Api.Domain;
+namespace LawyerSite.Api.Domain;
 
 /// <summary>
 /// Запись на приём к психологу

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Services;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +15,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         // Обработка DateTime: используем конвертер для UTC
-        options.JsonSerializerOptions.Converters.Add(new PsychoSite.Api.JsonStringDateTimeConverter());
+        options.JsonSerializerOptions.Converters.Add(new LawyerSite.Api.JsonStringDateTimeConverter());
         // Форматирование DateTime в ISO 8601
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
@@ -73,9 +73,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(configure =>
 {
-    configure.Title = "PsychoSite API";
+    configure.Title = "LawyerSite API";
     configure.Version = "v1";
-    configure.Description = "API для сайта частного психолога";
+    configure.Description = "API для сайта адвоката";
     
     // Add JWT Bearer authentication
     configure.AddSecurity("Bearer", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme
@@ -94,7 +94,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.EnsureCreated();
-    PsychoSite.Api.DbInitializer.Initialize(dbContext);
+    LawyerSite.Api.DbInitializer.Initialize(dbContext);
 }
 
 // Configure the HTTP request pipeline.

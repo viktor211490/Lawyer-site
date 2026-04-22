@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
 
-namespace PsychoSite.Api.Services;
+namespace LawyerSite.Api.Services;
 
 public interface IAuthService
 {

@@ -22,27 +22,27 @@ jobs:
         with:
           node-version: "22.22.2"
           cache: "npm"
-          cache-dependency-path: "src/PsychoSite.Web/package-lock.json"
+          cache-dependency-path: "src/LawyerSite.Web/package-lock.json"
 
       - name: Backend restore
-        run: dotnet restore ./src/PsychoSite.Api/PsychoSite.Api.csproj
+        run: dotnet restore ./src/LawyerSite.Api/LawyerSite.Api.csproj
 
       - name: Backend build
-        run: dotnet build ./src/PsychoSite.Api/PsychoSite.Api.csproj -c Release --no-restore
+        run: dotnet build ./src/LawyerSite.Api/LawyerSite.Api.csproj -c Release --no-restore
 
       - name: Restore dotnet tools
         run: dotnet tool restore
-        working-directory: ./src/PsychoSite.Api
+        working-directory: ./src/LawyerSite.Api
 
       - name: Generate OpenAPI + TypeScript client
         run: dotnet tool run nswag run nswag.json /variables:Configuration=Release
-        working-directory: ./src/PsychoSite.Api
+        working-directory: ./src/LawyerSite.Api
 
       - name: Frontend install
         run: npm ci
-        working-directory: ./src/PsychoSite.Web
+        working-directory: ./src/LawyerSite.Web
 
       - name: Frontend build
         run: npm run build
-        working-directory: ./src/PsychoSite.Web
+        working-directory: ./src/LawyerSite.Web
 

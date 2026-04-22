@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "psycho-site-web": {
+    "lawyer-site-web": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -39,7 +39,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/psycho-site-web",
+            "outputPath": "dist/lawyer-site-web",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -86,10 +86,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "psycho-site-web:build:production"
+              "buildTarget": "lawyer-site-web:build:production"
             },
             "development": {
-              "buildTarget": "psycho-site-web:build:development"
+              "buildTarget": "lawyer-site-web:build:development"
             }
           },
           "defaultConfiguration": "development"

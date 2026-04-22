@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PsychoSite.Api;
+namespace LawyerSite.Api;
 
 /// <summary>
 /// Конвертер для корректной обработки DateTime из JSON
@@ -21,7 +21,7 @@ public class JsonStringDateTimeConverter : JsonConverter<DateTime>
         if (DateTime.TryParse(dateString, null, System.Globalization.DateTimeStyles.RoundtripKind, out var result))
         {
             // Конвертируем в московское локальное время и возвращаем с Kind = Unspecified
-            var moscow = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(result);
+            var moscow = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(result);
             return DateTime.SpecifyKind(moscow, DateTimeKind.Unspecified);
         }
 
@@ -31,7 +31,7 @@ public class JsonStringDateTimeConverter : JsonConverter<DateTime>
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
         // Сериализуем в ISO 8601 формат в московском времени (без Z)
-        var moscow = PsychoSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(value);
+        var moscow = LawyerSite.Api.Time.MoscowTimeProvider.ConvertToMoscow(value);
         // Записываем без указания зоны, frontend будет интерпретировать как локальное Moscow time
         writer.WriteStringValue(moscow.ToString("yyyy-MM-ddTHH:mm:ss"));
     }

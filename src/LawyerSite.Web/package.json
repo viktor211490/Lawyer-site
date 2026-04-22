@@ -15,7 +15,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-client": "cd ../PsychoSite.Api && dotnet tool restore && dotnet tool run nswag run nswag.json /variables:Configuration=Debug"
+    "generate-client": "cd ../LawyerSite.Api && dotnet tool restore && dotnet tool run nswag run nswag.json /variables:Configuration=Debug"
   },
   "private": true,
   "dependencies": {

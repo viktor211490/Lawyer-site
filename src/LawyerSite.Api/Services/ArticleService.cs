@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
 
-namespace PsychoSite.Api.Services;
+namespace LawyerSite.Api.Services;
 
 public interface IArticleService
 {

@@ -13,5 +13,5 @@ registerLocaleData(localeRu);
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'psycho-site-web';
+  title = 'lawyer-site-web';
 }

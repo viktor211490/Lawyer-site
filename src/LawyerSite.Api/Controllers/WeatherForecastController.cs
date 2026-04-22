@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PsychoSite.Api.Controllers;
+namespace LawyerSite.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

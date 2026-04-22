@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
-using PsychoSite.Api.DTOs;
-using PsychoSite.Api.Services;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
+using LawyerSite.Api.DTOs;
+using LawyerSite.Api.Services;
 
-namespace PsychoSite.Api.Controllers;
+namespace LawyerSite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

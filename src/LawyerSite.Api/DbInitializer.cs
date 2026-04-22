@@ -1,8 +1,8 @@
 using BCrypt.Net;
-using PsychoSite.Api.Data;
-using PsychoSite.Api.Domain;
+using LawyerSite.Api.Data;
+using LawyerSite.Api.Domain;
 
-namespace PsychoSite.Api;
+namespace LawyerSite.Api;
 
 public static class DbInitializer
 {
@@ -14,8 +14,8 @@ public static class DbInitializer
             var admin = new AdminUser
             {
                 Username = "admin",
-                Email = "admin@psycho-site.ru",
-                FullName = "Алексеева Мария Викторовна",
+                Email = "admin@lawyer-site.ru",
+                FullName = "Администратор",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), // Пароль по умолчанию
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow

@@ -1,4 +1,4 @@
-namespace PsychoSite.Api.DTOs;
+namespace LawyerSite.Api.DTOs;
 
 // Записи
 public record CreateAppointmentDto(

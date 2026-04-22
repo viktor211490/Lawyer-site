@@ -1,6 +1,6 @@
 using System;
 
-namespace PsychoSite.Api.Time;
+namespace LawyerSite.Api.Time;
 
 public static class MoscowTimeProvider
 {
