@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Diagnostics;
+using System.Net.Sockets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -89,6 +91,11 @@ builder.Services.AddOpenApiDocument(configure =>
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    StartAngularDevServerIfNeeded(app);
+}
+
 // Ensure database is created
 using (var scope = app.Services.CreateScope())
 {
@@ -126,3 +133,113 @@ app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
+
+static void StartAngularDevServerIfNeeded(WebApplication app)
+{
+    // Goal: allow `dotnet run` to bring up both API and Angular dev-server.
+    // If port 4200 is already in use (e.g., dev server running separately), do nothing.
+    if (IsLocalPortOpen("127.0.0.1", 4200))
+    {
+        app.Logger.LogInformation("Angular dev server already running on http://localhost:4200.");
+        return;
+    }
+
+    var frontendDir = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "LawyerSite.Web"));
+    if (!Directory.Exists(frontendDir))
+    {
+        app.Logger.LogWarning("Frontend directory not found: {FrontendDir}. Skipping Angular startup.", frontendDir);
+        return;
+    }
+
+    app.Logger.LogInformation("Starting Angular dev server (npm start) in {FrontendDir}...", frontendDir);
+
+    ProcessStartInfo psi;
+    if (OperatingSystem.IsWindows())
+    {
+        // On Windows, npm is typically available as npm.cmd and is resolved by cmd.exe.
+        psi = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/c npm start",
+            WorkingDirectory = frontendDir,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+    }
+    else
+    {
+        psi = new ProcessStartInfo
+        {
+            FileName = "npm",
+            Arguments = "start",
+            WorkingDirectory = frontendDir,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+    }
+
+    var proc = new Process { StartInfo = psi, EnableRaisingEvents = true };
+
+    proc.OutputDataReceived += (_, e) =>
+    {
+        if (!string.IsNullOrWhiteSpace(e.Data))
+            app.Logger.LogInformation("[ng] {Line}", e.Data);
+    };
+
+    proc.ErrorDataReceived += (_, e) =>
+    {
+        if (!string.IsNullOrWhiteSpace(e.Data))
+            app.Logger.LogWarning("[ng] {Line}", e.Data);
+    };
+
+    try
+    {
+        if (!proc.Start())
+        {
+            app.Logger.LogWarning("Failed to start Angular dev server process.");
+            return;
+        }
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex, "Failed to start Angular dev server. Ensure Node/npm are installed and available in PATH.");
+        return;
+    }
+
+    proc.BeginOutputReadLine();
+    proc.BeginErrorReadLine();
+
+    app.Lifetime.ApplicationStopping.Register(() =>
+    {
+        try
+        {
+            if (!proc.HasExited)
+            {
+                app.Logger.LogInformation("Stopping Angular dev server...");
+                proc.Kill(entireProcessTree: true);
+            }
+        }
+        catch (Exception ex)
+        {
+            app.Logger.LogWarning(ex, "Failed to stop Angular dev server.");
+        }
+    });
+}
+
+static bool IsLocalPortOpen(string host, int port)
+{
+    try
+    {
+        using var client = new TcpClient();
+        var connectTask = client.ConnectAsync(host, port);
+        return connectTask.Wait(TimeSpan.FromMilliseconds(200)) && client.Connected;
+    }
+    catch
+    {
+        return false;
+    }
+}
