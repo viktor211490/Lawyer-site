@@ -1,0 +1,41 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2>Админ-панель</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="calendar" routerLinkActive="active">
+        <span class="nav-icon">📅</span>
+        <span>Календарь</span>
+      </a>
+      <a routerLink="services" routerLinkActive="active">
+        <span class="nav-icon">💆</span>
+        <span>Услуги</span>
+      </a>
+      <a routerLink="articles" routerLinkActive="active">
+        <span class="nav-icon">📝</span>
+        <span>Статьи</span>
+      </a>
+      <a routerLink="working-hours" routerLinkActive="active">
+        <span class="nav-icon">⏰</span>
+        <span>Рабочее время</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/home" target="_blank" class="nav-link">
+        <span class="nav-icon">🌐</span>
+        <span>На сайт</span>
+      </a>
+      <button (click)="logout()" class="logout-btn">
+        <span class="nav-icon">🚪</span>
+        <span>Выйти</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

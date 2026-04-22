@@ -1,0 +1,50 @@
+@if (visible()) {
+  <div class="modal-backdrop" (click)="cancel()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Заблокировать день</h3>
+        <button class="btn-close" (click)="cancel()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Дата</label>
+          <input
+            type="date"
+            [(ngModel)]="formData.date"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Причина</label>
+          <select [(ngModel)]="formData.reason">
+            <option value="Vacation">Отпуск</option>
+            <option value="Sick">Больничный</option>
+            <option value="Personal">Личные дела</option>
+            <option value="Other">Другое</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Комментарий (необязательно)</label>
+          <textarea
+            [(ngModel)]="formData.comment"
+            rows="3"
+            placeholder="Дополнительная информация"
+          ></textarea>
+        </div>
+
+        <div class="info-box">
+          <p>⚠️ Все записи на этот день будут скрыты, новые записи станут невозможны.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancel()">Отмена</button>
+        <button class="btn-primary" (click)="submit()" [disabled]="!isValid()">
+          Заблокировать
+        </button>
+      </div>
+    </div>
+  </div>
+}

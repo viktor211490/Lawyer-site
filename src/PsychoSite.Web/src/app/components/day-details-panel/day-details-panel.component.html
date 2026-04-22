@@ -1,0 +1,233 @@
+<div class="panel-overlay" [class.show]="isOpen()" (click)="close()"></div>
+
+<div class="day-details-panel" [class.open]="isOpen()">
+  <div class="panel-content">
+    <div class="panel-header">
+      <h2>Записи на {{ selectedDate ? formatDate(selectedDate) : '...' }}</h2>
+      <div class="header-actions">
+        @if (isDayBlocked()) {
+          <button class="btn-icon btn-unblock" (click)="unblockCurrentDay()" title="Разблокировать день">✅</button>
+        } @else {
+          <button class="btn-icon" (click)="openBlockSlotModal()" title="Заблокировать слот">⏰</button>
+        }
+        <button class="btn-icon" (click)="openBlockDayModal()" title="Заблокировать день">🚫</button>
+        <button class="btn-icon" (click)="exportToCsv()" title="Экспорт CSV">📥</button>
+        <button class="btn-icon" (click)="close()" title="Закрыть">✕</button>
+      </div>
+    </div>
+
+    @if (statistics(); as stats) {
+      <!-- Статистика -->
+      <div class="statistics-grid">
+        <div class="stat-card total">
+          <span class="stat-value">{{ stats.totalAppointments }}</span>
+          <span class="stat-label">Всего</span>
+        </div>
+        <div class="stat-card confirmed">
+          <span class="stat-value">{{ stats.confirmedAppointments }}</span>
+          <span class="stat-label">Подтверждено</span>
+        </div>
+        <div class="stat-card cancelled">
+          <span class="stat-value">{{ stats.cancelledAppointments }}</span>
+          <span class="stat-label">Отменено</span>
+        </div>
+      </div>
+
+      @if (isDayBlocked()) {
+        <div class="day-blocked-warning">
+          <p>⚠️ Этот день заблокирован. Записи скрыты, новые записи невозможны.</p>
+          <button class="btn-primary" (click)="unblockCurrentDay()">Разблокировать день</button>
+        </div>
+      }
+
+      <!-- Фильтры -->
+      <div class="filters">
+        <button
+          class="filter-btn"
+          [class.active]="filter() === 'all'"
+          (click)="filter.set('all')">
+          Все
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="filter() === 'scheduled'"
+          (click)="filter.set('scheduled')">
+          Запланировано
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="filter() === 'confirmed'"
+          (click)="filter.set('confirmed')">
+          Подтверждено
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="filter() === 'cancelled'"
+          (click)="filter.set('cancelled')">
+          Отменено
+        </button>
+      </div>
+
+      <!-- Поиск -->
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Поиск по фамилии..."
+          [formControl]="searchControl"
+        />
+      </div>
+
+      <!-- Список записей и блокировок -->
+      <div class="appointments-list">
+        @for (item of getSortedItems(stats); track trackByFn($index, item)) {
+          @if (isAppointment(item)) {
+            <div class="appointment-item-wrapper">
+              <app-appointment-card
+                [appointment]="item"
+                (statusChanged)="onStatusChanged({ id: $event.id, status: $event.status })"
+                (deleted)="loadDayDetails()">
+              </app-appointment-card>
+              <div class="appointment-actions">
+                <button class="btn-action btn-reschedule" (click)="openRescheduleModal(item)" title="Перенести запись">📅</button>
+              </div>
+            </div>
+          } @else if (isBlockedSlot(item)) {
+            <div class="blocked-slot-card" [class]="'reason-' + item.reason">
+              <div class="blocked-info">
+                <span class="blocked-icon">{{ getIcon(item.reason) }}</span>
+                <div>
+                  <div class="blocked-time">{{ formatTime(item.dateTime) }} - {{ formatEndTime(item) }}</div>
+                  <div class="blocked-reason">{{ getReasonName(item.reason) }}</div>
+                  @if (item.comment) {
+                    <div class="blocked-comment">{{ item.comment }}</div>
+                  }
+                </div>
+              </div>
+              <button class="btn-delete" (click)="deleteBlock(item.id)" title="Снять блокировку">🗑</button>
+            </div>
+          }
+        }
+
+        @if (getSortedItems(stats).length === 0 && !isDayBlocked()) {
+          <div class="empty-state">
+            <p>Нет записей на этот день</p>
+            <button class="btn-primary" (click)="openQuickBookingModal()">+ Быстрая запись</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="loading">Загрузка...</div>
+    }
+  </div>
+</div>
+
+<!-- Block Slot Modal -->
+<app-block-slot-modal
+  [visible]="blockSlotModalVisible"
+  [slotData]="selectedSlotData()"
+  (closed)="closeBlockSlotModal()"
+  (saved)="onBlockSaved()">
+</app-block-slot-modal>
+
+<!-- Reschedule Modal -->
+@if (rescheduleModalVisible()) {
+  <div class="modal-backdrop" (click)="closeRescheduleModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Перенос записи</h3>
+        <button class="btn-close" (click)="closeRescheduleModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="reschedule-info">
+          Перенос записи клиента <strong>{{ selectedAppointment()?.clientName }}</strong>
+          с {{ formatRescheduleCurrentTime() }}
+        </p>
+
+        <div class="form-group">
+          <label>Новая дата и время</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="rescheduleFormData.dateTime"
+          />
+        </div>
+
+        <div class="info-box">
+          <p>⚠️ Новое время должно быть свободным (не занято другими записями).</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeRescheduleModal()">Отмена</button>
+        <button class="btn-primary" (click)="confirmReschedule()" [disabled]="!rescheduleFormData.dateTime">
+          Перенести
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Quick Booking Modal -->
+@if (quickBookingVisible()) {
+  <div class="modal-backdrop" (click)="closeQuickBooking()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Быстрая запись</h3>
+        <button class="btn-close" (click)="closeQuickBooking()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Дата и время</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="quickBookingFormData.dateTime"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>ФИО клиента *</label>
+          <input
+            type="text"
+            [(ngModel)]="quickBookingFormData.clientName"
+            placeholder="Иванов Иван Иванович"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Телефон *</label>
+          <input
+            type="tel"
+            [(ngModel)]="quickBookingFormData.clientPhone"
+            placeholder="+7 (999) 123-45-67"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            [(ngModel)]="quickBookingFormData.clientEmail"
+            placeholder="example@mail.ru"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Комментарий</label>
+          <textarea
+            [(ngModel)]="quickBookingFormData.notes"
+            rows="3"
+            placeholder="Кратко опишите ваш запрос"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeQuickBooking()">Отмена</button>
+        <button class="btn-primary" (click)="confirmQuickBooking()" [disabled]="!quickBookingFormData.clientName || !quickBookingFormData.clientPhone || !quickBookingFormData.dateTime">
+          Записать
+        </button>
+      </div>
+    </div>
+  </div>
+}

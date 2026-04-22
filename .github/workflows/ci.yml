@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.22.2"
+          cache: "npm"
+          cache-dependency-path: "src/PsychoSite.Web/package-lock.json"
+
+      - name: Backend restore
+        run: dotnet restore ./src/PsychoSite.Api/PsychoSite.Api.csproj
+
+      - name: Backend build
+        run: dotnet build ./src/PsychoSite.Api/PsychoSite.Api.csproj -c Release --no-restore
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+        working-directory: ./src/PsychoSite.Api
+
+      - name: Generate OpenAPI + TypeScript client
+        run: dotnet tool run nswag run nswag.json /variables:Configuration=Release
+        working-directory: ./src/PsychoSite.Api
+
+      - name: Frontend install
+        run: npm ci
+        working-directory: ./src/PsychoSite.Web
+
+      - name: Frontend build
+        run: npm run build
+        working-directory: ./src/PsychoSite.Web
+

@@ -1,0 +1,99 @@
+<div class="admin-layout">
+
+  <main class="admin-content">
+    <div class="admin-header">
+      <h1>Настройка рабочего времени</h1>
+    </div>
+
+    <div class="info-box">
+      <p>📌 Настройте стандартное рабочее время для каждого дня недели.
+      Для изменения времени конкретного дня используйте календарь.</p>
+    </div>
+
+    <div class="week-settings card">
+      <table class="settings-table">
+        <thead>
+          <tr>
+            <th>День недели</th>
+            <th>Рабочий день</th>
+            <th>Начало</th>
+            <th>Конец</th>
+            <th>Длительность слота</th>
+            <th>Перерыв между записями</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (day of daysOfWeek; track day.num) {
+            <tr>
+              <td><strong>{{ day.name }}</strong></td>
+              <td>
+                <label class="toggle-label">
+                  <input
+                    type="checkbox"
+                    [checked]="getDaySetting(day.num)?.isWorkingDay"
+                    (change)="toggleWorkingDay(day.num, $event)"
+                  />
+                  <span class="toggle-switch"></span>
+                </label>
+              </td>
+              <td>
+                <select (change)="updateSetting(day.num, 'startHour', $event)">
+                  @for (h of hours; track h) {
+                    <option [value]="h" [selected]="getDaySetting(day.num)?.startHour === h">
+                      {{ h | number:'2.0' }}
+                    </option>
+                  }
+                </select>
+                :
+                <select (change)="updateSetting(day.num, 'startMinute', $event)">
+                  <option [value]="0" [selected]="getDaySetting(day.num)?.startMinute === 0">00</option>
+                  <option [value]="30" [selected]="getDaySetting(day.num)?.startMinute === 30">30</option>
+                </select>
+              </td>
+              <td>
+                <select (change)="updateSetting(day.num, 'endHour', $event)">
+                  @for (h of hours; track h) {
+                    <option [value]="h" [selected]="getDaySetting(day.num)?.endHour === h">
+                      {{ h | number:'2.0' }}
+                    </option>
+                  }
+                </select>
+                :
+                <select (change)="updateSetting(day.num, 'endMinute', $event)">
+                  <option [value]="0" [selected]="getDaySetting(day.num)?.endMinute === 0">00</option>
+                  <option [value]="30" [selected]="getDaySetting(day.num)?.endMinute === 30">30</option>
+                </select>
+              </td>
+              <td>
+                <select (change)="updateSetting(day.num, 'slotDurationMinutes', $event)">
+                  <option [value]="15" [selected]="getDaySetting(day.num)?.slotDurationMinutes === 15">15 мин</option>
+                  <option [value]="30" [selected]="getDaySetting(day.num)?.slotDurationMinutes === 30">30 мин</option>
+                  <option [value]="60" [selected]="getDaySetting(day.num)?.slotDurationMinutes === 60">60 мин</option>
+                  <option [value]="90" [selected]="getDaySetting(day.num)?.slotDurationMinutes === 90">90 мин</option>
+                </select>
+              </td>
+              <td>
+                <select (change)="updateSetting(day.num, 'breakBetweenSlotsMinutes', $event)">
+                  <option [value]="0" [selected]="getDaySetting(day.num)?.breakBetweenSlotsMinutes === 0">Без перерыва</option>
+                  <option [value]="15" [selected]="getDaySetting(day.num)?.breakBetweenSlotsMinutes === 15">15 минут</option>
+                  <option [value]="20" [selected]="getDaySetting(day.num)?.breakBetweenSlotsMinutes === 20">20 минут</option>
+                  <option [value]="30" [selected]="getDaySetting(day.num)?.breakBetweenSlotsMinutes === 30">30 минут</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn-save" (click)="saveDay(day.num)" title="Сохранить настройки дня">💾</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (message()) {
+      <div [class]="messageType() === 'error' ? 'error-message' : 'success-message'">
+        {{ message() }}
+      </div>
+    }
+  </main>
+</div>

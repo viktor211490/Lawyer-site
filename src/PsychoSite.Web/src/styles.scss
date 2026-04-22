@@ -1,0 +1,188 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* Основной фон - Воздушный крем */
+  --bg-primary: #FFF9F0;
+  --bg-secondary: #FAF3E8;
+  
+  /* Акценты - Мягкий шалфей и Теплый персик */
+  --accent-sage: #B7C9B7;
+  --accent-sage-light: #D4E2D4;
+  --accent-peach: #FAD5B5;
+  --accent-peach-light: #F3CFB3;
+  
+  /* Текст - Глубокий лесной */
+  --text-primary: #2F3E2F;
+  --text-secondary: #4A5A4A;
+  --text-muted: #6A7A6A;
+  
+  /* Градиенты */
+  --gradient-sage: linear-gradient(135deg, #B7C9B7, #D4E2D4);
+  --gradient-peach: linear-gradient(135deg, #FAD5B5, #F3CFB3);
+  --gradient-hero: linear-gradient(135deg, #FFF9F0 0%, #FAF3E8 100%);
+  
+  /* Тени */
+  --shadow-sm: 0 2px 8px rgba(47, 62, 47, 0.08);
+  --shadow-md: 0 4px 16px rgba(47, 62, 47, 0.12);
+  --shadow-lg: 0 8px 32px rgba(47, 62, 47, 0.16);
+  
+  /* Скругления */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+}
+
+html, body { 
+  height: 100%; 
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  
+  &:hover {
+    color: var(--accent-sage);
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn-primary {
+  background: var(--gradient-sage);
+  color: var(--text-primary);
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.btn-secondary {
+  background: var(--gradient-peach);
+  color: var(--text-primary);
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--accent-sage-light);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--accent-sage);
+    box-shadow: 0 0 0 3px rgba(183, 201, 183, 0.2);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: #c62828;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.success-message {
+  color: #2e7d32;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+// Анимации
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}

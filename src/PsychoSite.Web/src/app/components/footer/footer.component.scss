@@ -1,0 +1,35 @@
+.site-footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--accent-sage-light);
+  padding: 40px 0 20px;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.footer-info h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.footer-info p {
+  color: var(--text-muted);
+}
+
+.footer-contact p {
+  color: var(--text-secondary);
+  margin: 8px 0;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--accent-sage-light);
+  color: var(--text-muted);
+}

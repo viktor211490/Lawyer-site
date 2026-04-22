@@ -1,0 +1,48 @@
+{
+  "name": "psycho-site-web",
+  "version": "0.0.0",
+  "engines": {
+    "node": "22.22.2",
+    "npm": ">=10.0.0"
+  },
+  "volta": {
+    "node": "22.22.2",
+    "npm": "10.9.7"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config src/proxy.conf.js",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "generate-client": "cd ../PsychoSite.Api && dotnet tool restore && dotnet tool run nswag run nswag.json /variables:Configuration=Debug"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^21.2.9",
+    "@angular/common": "^21.2.9",
+    "@angular/compiler": "^21.2.9",
+    "@angular/core": "^21.2.9",
+    "@angular/forms": "^21.2.9",
+    "@angular/platform-browser": "^21.2.9",
+    "@angular/platform-browser-dynamic": "^21.2.9",
+    "@angular/router": "^21.2.9",
+    "date-fns": "^4.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^21.2.7",
+    "@angular/cli": "^21.2.7",
+    "@angular/compiler-cli": "^21.2.9",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.6.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.9.3"
+  }
+}

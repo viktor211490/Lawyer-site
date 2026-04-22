@@ -1,0 +1,35 @@
+<div class="login-page">
+  <div class="login-card card">
+    <h1>Вход в админ-панель</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Имя пользователя или Email</label>
+        <input
+          id="username"
+          formControlName="username"
+          type="text"
+          placeholder="admin или email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          placeholder="••••••••"
+        />
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+      }
+
+      <button type="submit" class="btn-primary btn-block" [disabled]="loginForm.invalid">
+        Войти
+      </button>
+    </form>
+  </div>
+</div>

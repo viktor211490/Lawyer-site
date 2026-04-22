@@ -1,0 +1,140 @@
+<app-header></app-header>
+
+<main class="admin-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>Управление услугами</h1>
+      <button class="btn-primary" (click)="openCreateModal()">+ Добавить услугу</button>
+    </div>
+
+    <div class="filters">
+      <label class="checkbox-label">
+        <input type="checkbox" [checked]="showActiveOnly()" (change)="toggleActiveFilter()" />
+        Только активные
+      </label>
+    </div>
+
+    <div class="services-table-container card">
+      <table class="services-table">
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Длительность</th>
+            <th>Стоимость</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (service of services(); track service.id) {
+            <tr>
+              <td class="title-cell">{{ service.title }}</td>
+              <td class="description-cell">{{ service.description || '—' }}</td>
+              <td>{{ service.durationMinutes }} мин</td>
+              <td>{{ service.price | number:'1.0-0':'ru' }} ₽</td>
+              <td>
+                <span class="status-badge" [class.active]="service.isActive">
+                  {{ service.isActive ? 'Активна' : 'Неактивна' }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button class="btn-icon" (click)="editService(service)" title="Редактировать">✏️</button>
+                <button class="btn-icon" (click)="toggleActive(service)" [title]="service.isActive ? 'Деактивировать' : 'Активировать'">
+                  {{ service.isActive ? '🔴' : '🟢' }}
+                </button>
+                <button class="btn-icon btn-delete" (click)="deleteService(service)" title="Удалить">🗑</button>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td colspan="6" class="empty-state">Нет услуг</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+@if (modalVisible()) {
+  <div class="modal-overlay" (click)="closeModal()"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <h2>{{ isEditMode() ? 'Редактирование услуги' : 'Новая услуга' }}</h2>
+      <button class="btn-close" (click)="closeModal()">✕</button>
+    </div>
+
+    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">Название *</label>
+          <input
+            id="title"
+            formControlName="title"
+            type="text"
+            placeholder="Например: Индивидуальная консультация"
+          />
+          @if (f['title'].touched && f['title'].invalid) {
+            <div class="error-message">Укажите название</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="description">Описание</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            placeholder="Описание услуги"
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Стоимость (₽) *</label>
+            <input
+              id="price"
+              formControlName="price"
+              type="number"
+              min="0"
+            />
+            @if (f['price'].touched && f['price'].invalid) {
+              <div class="error-message">Укажите стоимость</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="durationMinutes">Длительность (мин) *</label>
+            <input
+              id="durationMinutes"
+              formControlName="durationMinutes"
+              type="number"
+              min="15"
+              step="15"
+            />
+            @if (f['durationMinutes'].touched && f['durationMinutes'].invalid) {
+              <div class="error-message">Укажите длительность</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isActive" />
+            Активная услуга (показывается клиентам)
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeModal()">Отмена</button>
+        <button type="submit" class="btn-primary" [disabled]="serviceForm.invalid">
+          {{ isEditMode() ? 'Сохранить' : 'Создать' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

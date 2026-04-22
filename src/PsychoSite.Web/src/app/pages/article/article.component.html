@@ -1,0 +1,27 @@
+<app-header></app-header>
+
+<main class="article-page">
+  @if (article(); as article) {
+    <article class="container">
+      @if (article.coverImage) {
+        <img [src]="article.coverImage" [alt]="article.title" class="article-cover">
+      }
+
+      <header class="article-header">
+        <h1>{{ article.title }}</h1>
+        <div class="article-meta">
+          <span class="author">{{ article.authorName }}</span>
+          <span class="date">{{ formatDate(article.publishedDate!) }}</span>
+        </div>
+      </header>
+
+      <div class="article-content" [innerHTML]="article.content"></div>
+    </article>
+  } @else {
+    <div class="container">
+      <p class="loading">Загрузка...</p>
+    </div>
+  }
+</main>
+
+<app-footer></app-footer>
