@@ -1,0 +1,92 @@
+<admin-page-header title="Статьи">
+  <div adminHeaderActions>
+    <a routerLink="/admin/article-new" mat-raised-button color="primary">Новая статья</a>
+  </div>
+</admin-page-header>
+
+<admin-action-toolbar>
+  <div class="toolbar-left">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Поиск</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Заголовок" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="status">
+      <mat-label>Статус</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option value="all">Все</mat-option>
+        <mat-option value="draft">Черновик</mat-option>
+        <mat-option value="scheduled">Запланировано</mat-option>
+        <mat-option value="published">Опубликовано</mat-option>
+        <mat-option value="hidden">Скрыто</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="toolbar-right">
+    <span class="count">Показано: {{ filteredArticles().length }}</span>
+  </div>
+</admin-action-toolbar>
+
+@if (filteredArticles().length === 0) {
+  <admin-empty-state
+    title="Статей пока нет"
+    description="Создайте первую статью — она появится в публичном разделе после публикации."
+    icon="article"
+  >
+    <a routerLink="/admin/article-new" mat-raised-button color="primary">Новая статья</a>
+  </admin-empty-state>
+} @else {
+  <div class="table card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Заголовок</th>
+          <th>Статус</th>
+          <th class="visibility">Видимость</th>
+          <th class="date">Дата</th>
+          <th class="actions-col">Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (article of filteredArticles(); track article.id) {
+          <tr>
+            <td class="title">{{ article.title }}</td>
+            <td>
+              <admin-status-pill
+                [label]="getStatusName(article.status || '')"
+                [tone]="getStatusTone(article.status || '')"
+              ></admin-status-pill>
+            </td>
+            <td class="visibility">
+              <button
+                mat-icon-button
+                type="button"
+                [disabled]="isVisibilityBusy(article.id!)"
+                (click)="toggleVisibility(article)"
+                [matTooltip]="(article.isVisibleInBlog ? 'Скрыть из блога' : 'Показать в блоге')"
+                [attr.aria-label]="article.isVisibleInBlog ? 'Скрыть из блога' : 'Показать в блоге'"
+              >
+                @if (isVisibilityBusy(article.id!)) {
+                  <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+                } @else {
+                  <mat-icon aria-hidden="true">{{ article.isVisibleInBlog ? 'visibility' : 'visibility_off' }}</mat-icon>
+                }
+              </button>
+              <span class="vis-label">{{ article.isVisibleInBlog ? 'Видимо' : 'Скрыто' }}</span>
+            </td>
+            <td class="date">{{ formatDate(article.publishedDate!) }}</td>
+            <td class="actions">
+              <a [routerLink]="['/admin/article', article.id]" mat-icon-button matTooltip="Редактировать">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button (click)="deleteArticle(article.id!)" mat-icon-button matTooltip="Удалить">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

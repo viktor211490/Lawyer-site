@@ -1,0 +1,103 @@
+<admin-page-header [title]="isEdit() ? 'Редактирование статьи' : 'Новая статья'">
+  <div adminHeaderActions>
+    <a routerLink="/admin/articles" mat-stroked-button>
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      К списку
+    </a>
+  </div>
+</admin-page-header>
+
+<form [formGroup]="articleForm" (ngSubmit)="onSubmit()" class="article-form">
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Заголовок</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Краткое описание</mat-label>
+    <textarea matInput formControlName="excerpt" rows="2"></textarea>
+  </mat-form-field>
+
+  <mat-card appearance="outlined" class="cover">
+    <div class="cover-title">Изображение статьи</div>
+    <div class="image-upload" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
+
+      @if (sourceImagePreview()) {
+        <img [src]="sourceImagePreview()" alt="Исходное изображение" class="image-preview" />
+        <div class="cover-actions">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon aria-hidden="true">swap_horiz</mat-icon>
+            Заменить
+          </button>
+        </div>
+      } @else {
+        <div class="upload-placeholder" (click)="fileInput.click()">
+          <mat-icon class="upload-icon" aria-hidden="true">photo_camera</mat-icon>
+          <div class="upload-text">Перетащите изображение сюда или кликните для выбора</div>
+          <div class="upload-hint">PNG, JPG до 5MB</div>
+        </div>
+      }
+    </div>
+  </mat-card>
+
+  @if (sourceImagePreview()) {
+    <mat-card appearance="outlined" class="crop-section">
+      <div class="cover-title">Превью для блога</div>
+
+      <div class="crop-row">
+        <div class="crop-row-meta">
+          <span class="crop-label">Широкое превью</span>
+          <span class="crop-hint">1200 × 630 · карточки в блоге</span>
+        </div>
+        @if (coverImagePreview()) {
+          <img [src]="coverImagePreview()" class="crop-thumb crop-thumb--wide" alt="" />
+        }
+        <button mat-stroked-button type="button" (click)="openCropDialog('cover')" [disabled]="isCropping()">
+          <mat-icon aria-hidden="true">crop</mat-icon>
+          {{ coverImagePreview() ? 'Перекадрировать' : 'Настроить' }}
+        </button>
+      </div>
+
+      <div class="crop-divider"></div>
+
+      <div class="crop-row">
+        <div class="crop-row-meta">
+          <span class="crop-label">Квадратное превью</span>
+          <span class="crop-hint">600 × 600 · промо-блоки</span>
+        </div>
+        @if (promoImagePreview()) {
+          <img [src]="promoImagePreview()" class="crop-thumb crop-thumb--square" alt="" />
+        }
+        <button mat-stroked-button type="button" (click)="openCropDialog('promo')" [disabled]="isCropping()">
+          <mat-icon aria-hidden="true">crop</mat-icon>
+          {{ promoImagePreview() ? 'Перекадрировать' : 'Настроить' }}
+        </button>
+      </div>
+    </mat-card>
+  }
+
+  <mat-card appearance="outlined" class="content-card">
+    <div class="content-title">Содержимое</div>
+    <quill-editor formControlName="content" [modules]="quillModules"></quill-editor>
+  </mat-card>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Теги (через запятую)</mat-label>
+    <input matInput formControlName="tags" placeholder="суд, семейные_споры, недвижимость, документы" />
+  </mat-form-field>
+
+  <div class="checks">
+    <mat-checkbox formControlName="isPublished">Опубликовать сразу</mat-checkbox>
+    <mat-checkbox formControlName="isVisibleInBlog">Показывать в блоге</mat-checkbox>
+  </div>
+
+  <div class="form-actions">
+    <button mat-raised-button color="primary" type="submit" [disabled]="articleForm.invalid || isSaving() || isUploadingCover() || isPublishing()">
+      {{ isEdit() ? 'Сохранить' : 'Создать' }}
+    </button>
+    @if (isEdit() && !articleForm.get('isPublished')?.value) {
+      <button mat-stroked-button type="button" (click)="publish()" [disabled]="isPublishing() || isSaving() || isUploadingCover()">Опубликовать</button>
+    }
+  </div>
+</form>

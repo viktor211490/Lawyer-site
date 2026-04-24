@@ -1,0 +1,162 @@
+.appointment-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--accent-sage);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  &.status-scheduled {
+    border-left-color: #FFA726;
+  }
+
+  &.status-confirmed {
+    border-left-color: #66BB6A;
+  }
+
+  &.status-cancelled {
+    border-left-color: #EF5350;
+    opacity: 0.7;
+  }
+}
+
+.apt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.apt-time {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &.status-scheduled {
+    background: #FFF3E0;
+    color: #E65100;
+  }
+
+  &.status-confirmed {
+    background: #E8F5E9;
+    color: #1B5E20;
+  }
+
+  &.status-cancelled {
+    background: #FFEBEE;
+    color: #B71C1C;
+  }
+}
+
+.apt-body {
+  margin-bottom: 12px;
+}
+
+.apt-service {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--accent-sage-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+
+  .service-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    opacity: 0.75;
+  }
+
+  .service-name {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .service-duration {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+}
+
+.apt-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.apt-phone {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 4px;
+
+  &:hover {
+    color: var(--accent-sage);
+  }
+}
+
+.apt-email {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.apt-notes {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.apt-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--accent-sage-light);
+  flex-wrap: wrap;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+}
+
+.action-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-reschedule {
+  border-radius: 999px;
+}
+
+.action-confirm {
+  color: rgba(27, 94, 32, 0.95);
+}
+
+.action-cancel {
+  color: rgba(183, 28, 28, 0.95);
+}
+
+.action-delete {
+  color: rgba(120, 120, 120, 0.95);
+}

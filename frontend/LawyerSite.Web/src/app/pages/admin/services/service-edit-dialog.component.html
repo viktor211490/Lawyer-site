@@ -1,0 +1,75 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content class="content">
+  <form [formGroup]="form" class="form">
+
+    <!-- Emoji picker -->
+    <div class="emoji-section">
+      <div class="emoji-trigger-row">
+        <div class="emoji-preview">{{ form.controls.emoji.value || '?' }}</div>
+        <mat-form-field appearance="outline" class="emoji-input-field">
+          <mat-label>Эмодзи (вручную)</mat-label>
+          <input matInput formControlName="emoji" placeholder="⚖️" maxlength="10" />
+          <mat-hint>Или выберите ниже</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="emoji-grid-panel">
+        <p class="emoji-group-label">Юридические и деловые</p>
+        <div class="emoji-grid">
+          @for (e of legalEmojis; track e) {
+            <button type="button" class="emoji-btn" [class.active]="form.controls.emoji.value === e" (click)="selectEmoji(e)">{{ e }}</button>
+          }
+        </div>
+
+        <p class="emoji-group-label">Дополнительные</p>
+        <div class="emoji-grid">
+          @for (e of otherEmojis; track e) {
+            <button type="button" class="emoji-btn" [class.active]="form.controls.emoji.value === e" (click)="selectEmoji(e)">{{ e }}</button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Название</mat-label>
+      <input matInput formControlName="title" placeholder="Например: Индивидуальная консультация" />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <mat-error>Укажите название</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Описание</mat-label>
+      <textarea matInput formControlName="description" rows="3" placeholder="Описание услуги"></textarea>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Стоимость (₽)</mat-label>
+        <input matInput formControlName="price" type="number" min="0" />
+        @if (form.controls.price.touched && form.controls.price.invalid) {
+          <mat-error>Укажите стоимость</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Длительность (мин)</mat-label>
+        <input matInput formControlName="durationMinutes" type="number" min="15" step="15" />
+        @if (form.controls.durationMinutes.touched && form.controls.durationMinutes.invalid) {
+          <mat-error>Укажите длительность</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-checkbox formControlName="isActive">Активная услуга (показывается клиентам)</mat-checkbox>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="close()">Отмена</button>
+  <button mat-raised-button color="primary" type="button" (click)="save()" [disabled]="form.invalid">
+    {{ data.mode === 'edit' ? 'Сохранить' : 'Создать' }}
+  </button>
+</mat-dialog-actions>
+

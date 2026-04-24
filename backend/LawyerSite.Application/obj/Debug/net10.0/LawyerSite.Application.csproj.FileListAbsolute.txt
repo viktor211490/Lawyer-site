@@ -1,0 +1,16 @@
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\bin\Debug\net10.0\LawyerSite.Application.deps.json
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\bin\Debug\net10.0\LawyerSite.Application.dll
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\bin\Debug\net10.0\LawyerSite.Application.pdb
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\bin\Debug\net10.0\LawyerSite.Domain.dll
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\bin\Debug\net10.0\LawyerSite.Domain.pdb
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.csproj.AssemblyReference.cache
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.AssemblyInfoInputs.cache
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.AssemblyInfo.cs
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.csproj.CoreCompileInputs.cache
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.sourcelink.json
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSi.C9F266CE.Up2Date
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.dll
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\refint\LawyerSite.Application.dll
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\LawyerSite.Application.pdb
+C:\Users\alexe\repos\Lawyer-site\backend\LawyerSite.Application\obj\Debug\net10.0\ref\LawyerSite.Application.dll

@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Кадрирование изображения</h2>
+
+<div mat-dialog-content class="content">
+  <div class="subtitle">
+    @if (data.preset === 'cover') { Обложка 1200×630 } @else { Промо 600×600 }
+  </div>
+
+  <div class="canvas">
+    <img #img [src]="data.imageUrl" alt="Источник" />
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">Отмена</button>
+  <button mat-raised-button color="primary" type="button" (click)="save()">Сохранить</button>
+</div>
+

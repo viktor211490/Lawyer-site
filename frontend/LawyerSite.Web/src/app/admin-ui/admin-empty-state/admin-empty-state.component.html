@@ -1,0 +1,15 @@
+<div class="empty">
+  @if (icon) {
+    <mat-icon class="empty-icon">{{ icon }}</mat-icon>
+  }
+
+  <div class="empty-title">{{ title }}</div>
+  @if (description) {
+    <div class="empty-desc">{{ description }}</div>
+  }
+
+  <div class="empty-actions">
+    <ng-content></ng-content>
+  </div>
+</div>
+

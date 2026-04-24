@@ -1,0 +1,309 @@
+<section class="booking-wizard">
+
+  <!-- Step progress indicator -->
+  <div class="step-progress">
+    <div class="step-item" [class.active]="currentStep() === 1" [class.done]="currentStep() > 1">
+      <span class="step-badge">{{ currentStep() > 1 ? '✓' : '1' }}</span>
+      <span class="step-label">Услуга</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep() > 1"></div>
+    <div class="step-item" [class.active]="currentStep() === 2" [class.done]="currentStep() > 2">
+      <span class="step-badge">{{ currentStep() > 2 ? '✓' : '2' }}</span>
+      <span class="step-label">Дата и время</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep() > 2"></div>
+    <div class="step-item" [class.active]="currentStep() === 3">
+      <span class="step-badge">3</span>
+      <span class="step-label">Контакты</span>
+    </div>
+  </div>
+
+  <!-- ─── Step 1: Service selection ───────────────────────────────────────── -->
+  @if (currentStep() === 1) {
+    <div class="step-view">
+      <h2 class="step-title">Выберите услугу</h2>
+
+      @if (filteredServices().length === 0) {
+        <p class="step-empty">Загрузка услуг…</p>
+      }
+
+      <div class="service-cards">
+        @for (s of filteredServices(); track s.id) {
+          <div
+            class="service-card"
+            [class.selected]="selectedServiceId() === s.id"
+            [class.unavailable]="s.isUnavailableDueToSlot"
+            (click)="selectService(s)"
+            role="button"
+            [attr.aria-pressed]="selectedServiceId() === s.id"
+            [attr.tabindex]="0"
+            (keydown.enter)="selectService(s)"
+          >
+            <div class="sc-icon">{{ getServiceIcon(s) }}</div>
+            <h3 class="sc-title">{{ s.title }}</h3>
+            @if (s.description) {
+              <p class="sc-desc">{{ s.description }}</p>
+            }
+            <div class="sc-meta">
+              @if (s.durationMinutes) { {{ s.durationMinutes }} мин }
+              @if (s.price) { · {{ s.price | number:'1.0-0':'ru' }} ₽ }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="step-cta">
+      <span class="cta-status">
+        @if (selectedServiceId()) {
+          {{ getSelectedServiceTitle() }}&nbsp;·&nbsp;{{ getSelectedServiceDuration() }}&nbsp;мин&nbsp;·&nbsp;{{ getSelectedServicePrice() | number:'1.0-0':'ru' }}&nbsp;₽
+        } @else {
+          Выберите услугу для продолжения
+        }
+      </span>
+      <button
+        class="btn-next"
+        type="button"
+        [disabled]="!canProceedToStep2()"
+        (click)="proceedToStep2()"
+      >
+        Далее&nbsp;→
+      </button>
+    </div>
+  }
+
+  <!-- ─── Step 2: Date & time ──────────────────────────────────────────────── -->
+  @if (currentStep() === 2) {
+    <div class="step-view">
+      <div class="step-back-row">
+        <button class="btn-back" type="button" (click)="goToStep(1)">← Изменить услугу</button>
+      </div>
+
+      <div class="service-mini-chip">
+        <span class="smc-icon">{{ getSelectedServiceIcon() }}</span>
+        <span>{{ getSelectedServiceTitle() }}&nbsp;·&nbsp;{{ getSelectedServiceDuration() }}&nbsp;мин&nbsp;·&nbsp;{{ getSelectedServicePrice() | number:'1.0-0':'ru' }}&nbsp;₽</span>
+      </div>
+
+      <div class="datetime-layout">
+        <!-- Left: month calendar -->
+        <div class="calendar-col">
+          <div class="calendar-header">
+            <button class="cal-nav-btn" type="button" (click)="previousMonth()">‹</button>
+            <span class="cal-month-label">{{ getCurrentDateRange() }}</span>
+            <button class="cal-nav-btn" type="button" (click)="nextMonth()">›</button>
+          </div>
+
+          <div class="month-grid">
+            <div class="month-weekdays">
+              <div class="wd">Пн</div>
+              <div class="wd">Вт</div>
+              <div class="wd">Ср</div>
+              <div class="wd">Чт</div>
+              <div class="wd">Пт</div>
+              <div class="wd">Сб</div>
+              <div class="wd">Вс</div>
+            </div>
+
+            <div class="month-days">
+              @for (d of monthDays(); track d.date) {
+                <button
+                  type="button"
+                  class="month-day"
+                  [class.today]="d.isToday"
+                  [class.non-working]="!d.isWorkingDay"
+                  [class.has-available]="d.hasAnyAvailable"
+                  [class.outside]="d.isOutsideMonth"
+                  [class.selected]="monthSelectedDateKey() === d.date"
+                  (click)="selectMonthDay(d.date)"
+                  [title]="d.dayNumber"
+                >
+                  <span class="num">{{ d.dayOfMonth }}</span>
+                  @if (d.hasAnyAvailable && !d.isOutsideMonth) {
+                    <span class="dot" aria-hidden="true"></span>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: slots for selected day -->
+        <div class="slots-col">
+          @if (monthSelectedDay(); as day) {
+            <div class="day-header">
+              <span class="day-name">{{ day.dayName }}</span>
+              <span class="day-number">{{ day.dayNumber }}</span>
+            </div>
+
+            @if (day.isWorkingDay) {
+              @if (day.slots.length > 0) {
+                <div class="slots-container">
+                  @for (slot of day.slots; track slot.time) {
+                    <button
+                      class="slot-btn"
+                      [class.available]="slot.isAvailable"
+                      [class.unavailable]="!slot.isAvailable"
+                      [class.unavailable-service]="slot.isUnavailableDueToService"
+                      [class.selected]="selectedSlot() === slot.time"
+                      (click)="selectSlot(slot)"
+                      [disabled]="!slot.isAvailable"
+                      [title]="getSlotTitle(slot)"
+                      type="button"
+                    >
+                      {{ getSlotTime(slot.time) }}
+                    </button>
+                  }
+                </div>
+              } @else {
+                <div class="non-working-message">
+                  <span>🈚</span>
+                  <p>Нет доступных слотов</p>
+                </div>
+              }
+            } @else {
+              <div class="non-working-message">
+                <span>😴</span>
+                <p>Консультации не проводятся</p>
+              </div>
+            }
+          } @else {
+            <div class="slots-placeholder">
+              <span>📅</span>
+              <p>Выберите дату в календаре</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (infoMessage()) {
+        <div class="alert alert-info">{{ infoMessage() }}</div>
+      }
+    </div>
+
+    <div class="step-cta">
+      <span class="cta-status">
+        @if (selectedSlot()) {
+          {{ getFormattedSelectedSlotShort() }}
+        } @else if (monthSelectedDateKey()) {
+          Выберите время
+        } @else {
+          Выберите дату
+        }
+      </span>
+      <button
+        class="btn-next"
+        type="button"
+        [disabled]="!canProceedToStep3()"
+        (click)="proceedToStep3()"
+      >
+        Далее&nbsp;→
+      </button>
+    </div>
+  }
+
+  <!-- ─── Step 3: Contacts ─────────────────────────────────────────────────── -->
+  @if (currentStep() === 3) {
+    <div class="step-view step-view--contacts">
+      <div class="step-back-row">
+        <button class="btn-back" type="button" (click)="goToStep(2)">← Изменить время</button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error" style="margin-bottom: 16px;">{{ errorMessage() }}</div>
+      }
+
+      <div class="step-layout two-col">
+        <!-- Contact form -->
+        <div class="block">
+          <div class="block-header">
+            <h2>Ваши данные</h2>
+            <p>Мы используем их только для связи по записи</p>
+          </div>
+
+          <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>ФИО</mat-label>
+              <input matInput formControlName="clientName" placeholder="Иванов Иван Иванович" />
+              @if (bookingForm.controls['clientName'].touched && bookingForm.controls['clientName'].invalid) {
+                <mat-error>Укажите ФИО</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="clientEmail" type="email" placeholder="example@mail.ru" />
+              @if (bookingForm.controls['clientEmail'].touched && bookingForm.controls['clientEmail'].invalid) {
+                <mat-error>
+                  @if (bookingForm.controls['clientEmail'].errors?.['required']) { Укажите email }
+                  @if (bookingForm.controls['clientEmail'].errors?.['email']) { Неверный формат email }
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Телефон</mat-label>
+              <input matInput formControlName="clientPhone" type="tel" placeholder="+7 (999) 123-45-67" />
+              @if (bookingForm.controls['clientPhone'].touched && bookingForm.controls['clientPhone'].invalid) {
+                <mat-error>Укажите телефон</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Комментарий</mat-label>
+              <textarea matInput formControlName="notes" rows="3" placeholder="Кратко опишите ваш запрос"></textarea>
+            </mat-form-field>
+
+            <label class="consent-label">
+              <input
+                type="checkbox"
+                formControlName="consentAccepted"
+                class="consent-checkbox"
+              />
+              <span class="consent-text">
+                Я согласен(а) на
+                <a href="/pd-consent.html" target="_blank" rel="noopener noreferrer" class="consent-link">
+                  обработку персональных данных
+                </a>
+              </span>
+            </label>
+            @if (bookingForm.controls['consentAccepted'].touched && bookingForm.controls['consentAccepted'].invalid) {
+              <p class="consent-error">Необходимо согласие на обработку персональных данных</p>
+            }
+
+            <button class="btn-submit" type="submit" [disabled]="!canSubmit()">
+              Записаться
+            </button>
+          </form>
+        </div>
+
+        <!-- Booking summary -->
+        <div class="block">
+          <div class="block-header">
+            <h2>Подтверждение</h2>
+            <p>Проверьте детали перед отправкой</p>
+          </div>
+
+          <div class="confirm-box">
+            <div class="row">
+              <span class="k">Время</span>
+              <span class="v">{{ getFormattedSelectedSlot() }}</span>
+            </div>
+            <div class="row">
+              <span class="k">Услуга</span>
+              <span class="v">{{ getSelectedServiceTitle() }}</span>
+            </div>
+            <div class="row">
+              <span class="k">Длительность</span>
+              <span class="v">{{ getSelectedServiceDuration() }} мин</span>
+            </div>
+            <div class="row">
+              <span class="k">Стоимость</span>
+              <span class="v">{{ getSelectedServicePrice() | number:'1.0-0':'ru' }} ₽</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+</section>

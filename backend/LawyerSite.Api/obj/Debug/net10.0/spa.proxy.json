@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "http://localhost:4200",
+"RedirectUrl": "",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "C:\\Users\\alexe\\repos\\Lawyer-site\\backend\\LawyerSite.Api\\..\\..\\frontend\\LawyerSite.Web",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

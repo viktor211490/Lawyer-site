@@ -1,0 +1,99 @@
+<app-header></app-header>
+
+<main class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Юридическая помощь<br>в сложной ситуации</h1>
+        <p class="hero-subtitle">
+          Чёткая стратегия, документы и защита интересов<br>
+          в переговорах и в суде
+        </p>
+        <a routerLink="/booking" class="btn-primary btn-large">
+          Записаться на консультацию
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image">
+          <img class="about-photo" src="/brand/hero.svg" alt="Адвокат" />
+        </div>
+        <div class="about-content">
+          <h2>Алексеева Татьяна Владимировна</h2>
+          <p class="subtitle">Адвокат</p>
+
+          <div class="about-text">
+            <p>
+              Помогаю защищать права и интересы клиентов в семейных и имущественных спорах,
+              а также при сделках с недвижимостью и подготовке документов.
+            </p>
+            <p>
+              Работаю прозрачно: оценка перспектив, план действий, подготовка доказательств
+              и сопровождение на всех этапах — от консультации до суда.
+            </p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">10+</span>
+              <span class="stat-label">лет опыта</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">клиентов</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">1000+</span>
+              <span class="stat-label">консультаций</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  @if (services().length > 0) {
+    <section class="services-section">
+      <div class="container">
+        <h2 class="section-title">С чем я помогаю</h2>
+
+        <div class="services-grid">
+          @for (s of services(); track s.id) {
+            <div class="service-card" (click)="goToBooking(s.id!)">
+              <div class="service-icon">{{ getServiceEmoji(s) }}</div>
+              <h3>{{ s.title }}</h3>
+              @if (s.description) {
+                <p>{{ s.description }}</p>
+              }
+              <button class="service-book-btn" type="button" (click)="$event.stopPropagation(); goToBooking(s.id!)">
+                Записаться
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Нужна консультация?</h2>
+        <p>Запишитесь на встречу, чтобы разобрать ситуацию и составить план действий</p>
+        <a routerLink="/booking" class="btn-primary btn-large">
+          Записаться на консультацию
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

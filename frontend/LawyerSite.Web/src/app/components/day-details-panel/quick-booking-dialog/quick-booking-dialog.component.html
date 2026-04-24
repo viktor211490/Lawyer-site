@@ -1,0 +1,147 @@
+<h2 mat-dialog-title>Быстрая запись</h2>
+
+<mat-dialog-content class="content">
+  @if (error) {
+    <mat-card appearance="outlined" class="error">
+      {{ error }}
+    </mat-card>
+  }
+
+  <mat-card appearance="outlined" class="calendar-card">
+    <div class="slots-title">Выберите день</div>
+
+    <div class="month-nav">
+      <button mat-stroked-button type="button" (click)="previousMonth()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <div class="month-label">{{ currentMonthLabel() }}</div>
+      <button mat-stroked-button type="button" (click)="nextMonth()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <div class="month-grid">
+      <div class="month-weekdays">
+        <div class="wd">Пн</div>
+        <div class="wd">Вт</div>
+        <div class="wd">Ср</div>
+        <div class="wd">Чт</div>
+        <div class="wd">Пт</div>
+        <div class="wd">Сб</div>
+        <div class="wd">Вс</div>
+      </div>
+
+      <div class="month-days">
+        @for (d of monthDays(); track d.dateKey) {
+          <button
+            type="button"
+            class="month-day"
+            [class.today]="d.isToday"
+            [class.outside]="d.isOutsideMonth"
+            [class.selected]="getMoscowDateKey(selectedDate()) === d.dateKey"
+            [class.non-working]="d.isNonWorking"
+            (click)="selectDay(d.dateKey)"
+            [title]="d.dateKey"
+          >
+            <span class="num">{{ d.dayOfMonth }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (!isWorkingDay()) {
+      <mat-card appearance="outlined" class="non-working-warning">
+        <div class="warn-title">Этот день отмечен как выходной</div>
+        <div class="warn-text">
+          Назначать консультации в выходной можно только если вы делаете это осознанно.
+          При сохранении мы добавим приписку в комментарий.
+        </div>
+        <div class="non-working-checkbox-row" (click)="toggleAllowOnNonWorking(!allowOnNonWorking())">
+          <mat-checkbox
+            [checked]="allowOnNonWorking()"
+            (change)="toggleAllowOnNonWorking($event.checked)"
+            (click)="$event.stopPropagation()"
+          >
+            Назначить консультацию в выходной
+          </mat-checkbox>
+        </div>
+      </mat-card>
+    }
+  </mat-card>
+
+  <mat-card appearance="outlined" class="slots-card">
+    <div class="slots-title">Слоты на выбранный день</div>
+
+    @if (isLoadingSlots()) {
+      <div class="loading">Загрузка слотов…</div>
+    } @else {
+      <div class="picker">
+        @for (d of days(); track d.dateKey) {
+          <div class="day">
+            <div class="day-header">{{ d.dayLabel }}</div>
+            <div class="slots">
+              @for (slot of d.slots; track slot.time) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="slot"
+                  [class.selected]="selectedSlotIso() === slot.time"
+                  [disabled]="!slot.isAvailable"
+                  (click)="selectSlot(slot)"
+                  [title]="(!slot.isAvailable ? 'Недоступно' : '')"
+                >
+                  {{ formatTime(slot.time) }}
+                </button>
+              }
+              @if (!d.slots?.length) {
+                <span class="no-slots">
+                  @if (!canPickSlots()) { Сначала подтвердите назначение в выходной } @else { Нет слотов }
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (form.controls['slotIso'].touched && form.controls['slotIso'].invalid) {
+      <div class="field-error">Выберите время</div>
+    }
+  </mat-card>
+
+  <form [formGroup]="form" class="form">
+    <input type="hidden" formControlName="slotIso" />
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>ФИО клиента</mat-label>
+      <input matInput formControlName="clientName" placeholder="Иванов Иван Иванович" />
+      @if (form.controls['clientName'].touched && form.controls['clientName'].invalid) {
+        <mat-error>Укажите ФИО</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Телефон</mat-label>
+      <input matInput formControlName="clientPhone" placeholder="+7 (999) 123-45-67" />
+      @if (form.controls['clientPhone'].touched && form.controls['clientPhone'].invalid) {
+        <mat-error>Укажите телефон</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="clientEmail" placeholder="example@mail.ru" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Комментарий</mat-label>
+      <textarea matInput formControlName="notes" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="isSaving">Отмена</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="isSaving || form.invalid || !canPickSlots()">Записать</button>
+</mat-dialog-actions>
+

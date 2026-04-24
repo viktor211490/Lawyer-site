@@ -1,0 +1,13 @@
+<header class="hdr">
+  <div class="hdr-text">
+    <h1 class="hdr-title">{{ title }}</h1>
+    @if (subtitle) {
+      <div class="hdr-subtitle">{{ subtitle }}</div>
+    }
+  </div>
+
+  <div class="hdr-actions">
+    <ng-content select="[adminHeaderActions]"></ng-content>
+  </div>
+</header>
+

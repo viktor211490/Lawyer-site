@@ -1,0 +1,123 @@
+<admin-page-header
+  title="Рабочие часы"
+  subtitle="Все значения времени отображаются по Москве. Для точечных изменений по дате используйте календарь."
+></admin-page-header>
+
+<mat-card appearance="outlined" class="info">
+  <div class="info-row">
+    <mat-icon aria-hidden="true">info</mat-icon>
+    <div class="info-text">
+      Настройте стандартное рабочее время для каждого дня недели.
+    </div>
+  </div>
+</mat-card>
+
+<div class="week-settings card">
+  <table class="settings-table">
+    <thead>
+      <tr>
+        <th>День недели</th>
+        <th>Рабочий день</th>
+        <th>Начало</th>
+        <th>Конец</th>
+        <th>Слот</th>
+        <th>Перерыв</th>
+        <th class="actions-col">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (day of daysOfWeek; track day.num) {
+        <tr>
+          <td class="day"><span class="day-name">{{ day.name }}</span></td>
+          <td>
+            <mat-slide-toggle
+              [checked]="getDaySetting(day.num)?.isWorkingDay"
+              (change)="toggleWorkingDayChecked(day.num, $event.checked)"
+            ></mat-slide-toggle>
+          </td>
+          <td class="time">
+            <mat-form-field appearance="outline" class="sel">
+              <mat-select
+                [value]="getDaySetting(day.num)?.startHour"
+                (selectionChange)="updateSettingValue(day.num, 'startHour', $event.value)"
+              >
+                @for (h of hours; track h) {
+                  <mat-option [value]="h">{{ h | number:'2.0' }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <span class="sep">:</span>
+            <mat-form-field appearance="outline" class="sel">
+              <mat-select
+                [value]="getDaySetting(day.num)?.startMinute"
+                (selectionChange)="updateSettingValue(day.num, 'startMinute', $event.value)"
+              >
+                <mat-option [value]="0">00</mat-option>
+                <mat-option [value]="30">30</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td class="time">
+            <mat-form-field appearance="outline" class="sel">
+              <mat-select
+                [value]="getDaySetting(day.num)?.endHour"
+                (selectionChange)="updateSettingValue(day.num, 'endHour', $event.value)"
+              >
+                @for (h of hours; track h) {
+                  <mat-option [value]="h">{{ h | number:'2.0' }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <span class="sep">:</span>
+            <mat-form-field appearance="outline" class="sel">
+              <mat-select
+                [value]="getDaySetting(day.num)?.endMinute"
+                (selectionChange)="updateSettingValue(day.num, 'endMinute', $event.value)"
+              >
+                <mat-option [value]="0">00</mat-option>
+                <mat-option [value]="30">30</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline" class="sel-wide">
+              <mat-select
+                [value]="getDaySetting(day.num)?.slotDurationMinutes"
+                (selectionChange)="updateSettingValue(day.num, 'slotDurationMinutes', $event.value)"
+              >
+                <mat-option [value]="15">15 мин</mat-option>
+                <mat-option [value]="30">30 мин</mat-option>
+                <mat-option [value]="60">60 мин</mat-option>
+                <mat-option [value]="90">90 мин</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline" class="sel-wide">
+              <mat-select
+                [value]="getDaySetting(day.num)?.breakBetweenSlotsMinutes"
+                (selectionChange)="updateSettingValue(day.num, 'breakBetweenSlotsMinutes', $event.value)"
+              >
+                <mat-option [value]="0">Без перерыва</mat-option>
+                <mat-option [value]="15">15 минут</mat-option>
+                <mat-option [value]="20">20 минут</mat-option>
+                <mat-option [value]="30">30 минут</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td class="actions-col">
+            <button mat-icon-button type="button" (click)="saveDay(day.num)" title="Сохранить настройки дня">
+              <mat-icon>save</mat-icon>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (message()) {
+  <mat-card appearance="outlined" class="msg" [class.err]="messageType() === 'error'">
+    {{ message() }}
+  </mat-card>
+}

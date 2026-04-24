@@ -1,0 +1,53 @@
+<div class="appointment-card" [class]="'status-' + getStatusClass(appointment.status || '')">
+  <div class="apt-header">
+    <div class="apt-time">{{ appointment.appointmentTime | utcToLocal:'HH:mm' }}</div>
+    <span class="status-badge" [class]="'status-' + getStatusClass(appointment.status || '')">
+      {{ getStatusName(appointment.status || '') }}
+    </span>
+  </div>
+
+  <div class="apt-body">
+    @if (appointment.serviceTitle) {
+      <div class="apt-service">
+        <span class="service-icon">•</span>
+        <span class="service-name">{{ appointment.serviceTitle }}</span>
+        <span class="service-duration">({{ appointment.durationMinutes }} мин)</span>
+      </div>
+    }
+    <div class="apt-name">{{ appointment.clientName }}</div>
+    <a [href]="'tel:' + appointment.clientPhone" class="apt-phone">{{ appointment.clientPhone }}</a>
+    @if (appointment.clientEmail) {
+      <div class="apt-email">{{ appointment.clientEmail }}</div>
+    }
+
+    @if (appointment.notes) {
+      <div class="apt-notes">{{ appointment.notes }}</div>
+    }
+  </div>
+
+  <div class="apt-actions">
+    <button mat-stroked-button type="button" class="action action-reschedule" (click)="reschedule()">
+      <mat-icon>event</mat-icon>
+      Перенести
+    </button>
+
+    <div class="action-right">
+      @if (appointment.status !== 'Confirmed') {
+        <button mat-button type="button" class="action action-confirm" (click)="confirm()">
+          <mat-icon>done</mat-icon>
+          Подтвердить
+        </button>
+      }
+      @if (appointment.status !== 'Cancelled') {
+        <button mat-button type="button" class="action action-cancel" (click)="cancel()">
+          <mat-icon>close</mat-icon>
+          Отменить
+        </button>
+      }
+      <button mat-button type="button" class="action action-delete" (click)="delete()">
+        <mat-icon>delete</mat-icon>
+        Удалить
+      </button>
+    </div>
+  </div>
+</div>

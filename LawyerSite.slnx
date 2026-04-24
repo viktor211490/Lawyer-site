@@ -1,5 +1,11 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/LawyerSite.Api/LawyerSite.Api.csproj" />
+  <Folder Name="/backend/">
+    <Project Path="backend/LawyerSite.Api/LawyerSite.Api.csproj" />
+    <Project Path="backend/LawyerSite.Domain/LawyerSite.Domain.csproj" />
+    <Project Path="backend/LawyerSite.Application/LawyerSite.Application.csproj" />
+    <Project Path="backend/LawyerSite.Infrastructure/LawyerSite.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/frontend/">
+    <Project Path="frontend/LawyerSite.Web/LawyerSite.Web.esproj" />
   </Folder>
 </Solution>

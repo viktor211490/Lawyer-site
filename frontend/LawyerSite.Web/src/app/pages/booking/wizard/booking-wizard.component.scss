@@ -1,0 +1,727 @@
+.booking-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 80px; // clearance for sticky CTA
+}
+
+// ─── Step progress indicator ─────────────────────────────────────────────────
+
+.step-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 28px 0 32px;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+
+  .step-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 2px solid var(--accent-sage-light);
+    background: var(--bg-primary);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s ease;
+  }
+
+  .step-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &.active {
+    .step-badge {
+      border-color: var(--accent-sage);
+      background: var(--accent-sage);
+      color: #fff;
+    }
+    .step-label {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+  }
+
+  &.done {
+    .step-badge {
+      border-color: var(--accent-sage);
+      background: var(--accent-sage-light);
+      color: var(--accent-sage);
+    }
+    .step-label {
+      color: var(--text-secondary);
+    }
+  }
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--accent-sage-light);
+  margin-bottom: 28px; // align with badge centres
+  transition: background 0.2s ease;
+
+  &.done {
+    background: var(--accent-sage);
+  }
+}
+
+// ─── Step view container ─────────────────────────────────────────────────────
+
+.step-view {
+  animation: fadeSlide 0.25s ease-out;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.step-title {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0 0 28px;
+  font-weight: 700;
+}
+
+.step-empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 40px 0;
+}
+
+.step-back-row {
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: var(--bg-primary);
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    border-color: var(--accent-sage);
+    color: var(--text-primary);
+    background: var(--accent-sage-light);
+  }
+}
+
+// ─── Step 1: Service cards ────────────────────────────────────────────────────
+
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1100px) {
+  .service-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .service-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--accent-sage-light);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  outline: none;
+
+  &:hover {
+    border-color: var(--accent-sage);
+    box-shadow: 0 4px 16px rgba(31, 58, 95, 0.1);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(31, 58, 95, 0.2);
+  }
+
+  &.selected {
+    border-color: var(--accent-sage);
+    background: rgba(183, 201, 183, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-sage), 0 4px 16px rgba(31, 58, 95, 0.12);
+  }
+
+  &.unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.sc-icon {
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.sc-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.sc-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.sc-meta {
+  margin-top: auto;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding-top: 4px;
+}
+
+// ─── Sticky CTA bar ───────────────────────────────────────────────────────────
+
+.step-cta {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--accent-sage-light);
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cta-status {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-next {
+  background: var(--accent-sage);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    background: var(--accent-sage-dark, #3a6140);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Step 2: Date/time layout ─────────────────────────────────────────────────
+
+.service-mini-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(183, 201, 183, 0.18);
+  border: 1px solid var(--accent-sage-light);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+
+  .smc-icon { font-size: 1.1rem; }
+}
+
+.datetime-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .datetime-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-col {
+  min-width: 0;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cal-nav-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--accent-sage-light);
+  border-radius: 50%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.12s ease;
+
+  &:hover { background: var(--accent-sage-light); }
+}
+
+.cal-month-label {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.slots-col {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  min-height: 200px;
+}
+
+.slots-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+
+  span { font-size: 2rem; }
+  p { margin: 0; font-size: 0.9rem; }
+}
+
+// ─── Calendar grid ────────────────────────────────────────────────────────────
+
+.month-grid {
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.month-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: rgba(31, 58, 95, 0.05);
+  border-bottom: 1px solid var(--accent-sage-light);
+  padding: 8px 0;
+
+  .wd {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+}
+
+.month-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.month-day {
+  border: 0;
+  border-right: 1px solid var(--accent-sage-light);
+  border-bottom: 1px solid var(--accent-sage-light);
+  background: transparent;
+  padding: 8px 6px;
+  min-height: 52px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  transition: background 0.1s ease;
+  color: var(--text-primary);
+  font-family: inherit;
+
+  &:nth-child(7n) { border-right: 0; }
+
+  &:hover { background: rgba(31, 58, 95, 0.04); }
+
+  &.non-working {
+    opacity: 0.5;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  &.today {
+    box-shadow: inset 0 0 0 2px rgba(198, 161, 91, 0.5);
+  }
+
+  &.selected {
+    background: rgba(31, 58, 95, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(31, 58, 95, 0.35);
+  }
+
+  .num {
+    font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .dot {
+    margin-top: auto;
+    align-self: center;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--accent-peach);
+  }
+
+  &.has-available .num { color: var(--accent-sage); }
+
+  &.outside {
+    .num {
+      color: var(--text-muted);
+      font-weight: 500;
+      opacity: 0.6;
+    }
+  }
+}
+
+// ─── Slots list ───────────────────────────────────────────────────────────────
+
+.day-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.day-name {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.day-number {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.slots-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 8px;
+}
+
+.slot-btn {
+  padding: 8px 4px;
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  font-family: inherit;
+
+  &:hover:not(:disabled):not(.selected) {
+    border-color: var(--accent-sage);
+    background: rgba(183, 201, 183, 0.15);
+  }
+
+  &.selected {
+    background: var(--accent-peach);
+    border-color: var(--accent-peach);
+    color: var(--text-primary);
+
+    &:hover {
+      border-color: #000;
+    }
+  }
+
+  &.unavailable,
+  &:disabled {
+    background: #f0f0f0;
+    border-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.unavailable-service {
+    background: #f4f4f4;
+    border-color: #e0e0e0;
+    opacity: 0.45;
+    color: #bbb;
+    position: relative;
+
+    &::after {
+      content: '⊗';
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      font-size: 0.65rem;
+      color: #aaa;
+    }
+  }
+
+}
+
+.non-working-message {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+
+  span { font-size: 1.75rem; display: block; margin-bottom: 8px; }
+  p { font-size: 0.88rem; margin: 0; }
+}
+
+// ─── Step 3: contacts layout ──────────────────────────────────────────────────
+
+.step-layout.two-col {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .step-layout.two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.block {
+  background: var(--bg-primary);
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+.block-header {
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+.full {
+  width: 100%;
+}
+
+// ─── Consent checkbox ─────────────────────────────────────────────────────────
+
+.consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 20px;
+  cursor: pointer;
+}
+
+.consent-checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--accent-sage);
+  cursor: pointer;
+}
+
+.consent-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.consent-link {
+  color: var(--accent-sage);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover { color: var(--text-primary); }
+}
+
+.consent-error {
+  margin: -14px 0 16px;
+  font-size: 0.8rem;
+  color: #c62828;
+}
+
+// ─── Submit button ────────────────────────────────────────────────────────────
+
+.btn-submit {
+  width: 100%;
+  padding: 14px 24px;
+  background: var(--accent-sage);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  font-family: inherit;
+
+  &:hover:not(:disabled) {
+    background: var(--accent-sage-dark, #3a6140);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Booking summary ──────────────────────────────────────────────────────────
+
+.confirm-box {
+  background: rgba(31, 58, 95, 0.03);
+  border: 1px solid var(--accent-sage-light);
+  border-radius: var(--radius-md);
+  padding: 4px 0;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(183, 201, 183, 0.2);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  .k {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .v {
+    color: var(--text-primary);
+    font-weight: 700;
+    text-align: right;
+    font-size: 0.9rem;
+  }
+}
+
+// ─── Alerts ───────────────────────────────────────────────────────────────────
+
+.alert {
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  margin-top: 16px;
+}
+
+.alert-error {
+  border: 1px solid rgba(180, 60, 60, 0.35);
+  background: rgba(180, 60, 60, 0.08);
+  color: #b83535;
+}
+
+.alert-info {
+  border: 1px solid rgba(31, 58, 95, 0.2);
+  background: rgba(31, 58, 95, 0.05);
+  color: var(--text-secondary);
+}
+
+// ─── Mobile ───────────────────────────────────────────────────────────────────
+
+@media (max-width: 600px) {
+  .step-progress {
+    padding: 20px 0 24px;
+  }
+
+  .step-item {
+    min-width: 60px;
+
+    .step-label { display: none; }
+    .step-badge { width: 30px; height: 30px; font-size: 0.8rem; }
+  }
+
+  .step-title {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+  }
+
+  .step-cta {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .cta-status {
+    font-size: 0.85rem;
+    white-space: normal;
+  }
+}

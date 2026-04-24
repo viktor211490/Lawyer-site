@@ -1,0 +1,36 @@
+.empty {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding: 40px 24px;
+  border: 1px dashed var(--admin-border, #e5e7eb);
+  border-radius: var(--admin-radius-md, 14px);
+  background: var(--admin-surface, #fff);
+}
+
+.empty-icon {
+  margin-bottom: 10px;
+  color: var(--admin-text-muted, #64748b);
+}
+
+.empty-title {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--admin-text, #0f172a);
+}
+
+.empty-desc {
+  margin-top: 6px;
+  max-width: 60ch;
+  font-size: 13px;
+  color: var(--admin-text-muted, #64748b);
+}
+
+.empty-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+

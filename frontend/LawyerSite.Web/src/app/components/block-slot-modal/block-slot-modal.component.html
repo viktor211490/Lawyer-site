@@ -1,0 +1,105 @@
+@if (visible()) {
+  <div class="modal-backdrop" (click)="cancel()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Заблокировать время</h3>
+        <button class="btn-close" (click)="cancel()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Календарь со слотами -->
+        <div class="calendar-section">
+          <div class="calendar-header">
+            <button class="nav-btn" (click)="previousDays()" [disabled]="isToday()">←</button>
+            <h4>{{ getCurrentDateRange() }}</h4>
+            <button class="nav-btn" (click)="nextDays()">→</button>
+          </div>
+
+          <div class="calendar-grid">
+            @for (day of filteredDays(); track trackByDay($index, day)) {
+              <div class="calendar-day" [class.today]="day.isToday">
+                <div class="day-header">
+                  <span class="day-name">{{ day.dayName }}</span>
+                  <span class="day-number">{{ day.dayNumber }}</span>
+                </div>
+
+                <div class="slots-container">
+                  @for (slot of day.slots; track trackBySlot($index, slot)) {
+                    <button
+                      type="button"
+                      class="slot-btn"
+                      [class.available]="slot.isAvailable"
+                      [class.unavailable]="!slot.isAvailable"
+                      [class.selected]="isSlotSelected(slot.time)"
+                      [class.blocked]="slot.isBlocked"
+                      (click)="selectSlot(slot)"
+                      [disabled]="!slot.isAvailable && !isSlotSelected(slot.time)"
+                      [title]="getSlotTitle(slot)"
+                    >
+                      {{ getSlotTime(slot.time) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Выбранные слоты -->
+        @if (selectedSlots().length > 0) {
+          <div class="selected-slots-info">
+            <h4>Выбрано слотов: {{ selectedSlots().length }}</h4>
+            <div class="selected-slots-list">
+              @for (slot of selectedSlots(); track trackBySelectedSlot($index, slot)) {
+                <span class="selected-slot-tag">
+                  {{ getSlotTime(slot) }}
+                  <button type="button" class="remove-slot" (click)="removeSlot(slot)">×</button>
+                </span>
+              }
+            </div>
+            <div class="total-duration">
+              Общая длительность: {{ getTotalDuration() }} мин
+            </div>
+          </div>
+        }
+
+        <!-- Причина блокировки -->
+        <div class="form-group">
+          <label>Причина</label>
+          <select [(ngModel)]="formData.reason" (change)="onReasonChange()">
+            <option value="Lunch">Обед</option>
+            <option value="Personal">Личные дела</option>
+            <option value="Vacation">Отпуск</option>
+            <option value="Sick">Больничный</option>
+            <option value="Other">Другое</option>
+          </select>
+        </div>
+
+        @if (formData.reason === 'Other' || showComment()) {
+          <div class="form-group">
+            <label>Комментарий</label>
+            <textarea
+              [(ngModel)]="formData.comment"
+              rows="3"
+              placeholder="Укажите причину блокировки"
+            ></textarea>
+          </div>
+        }
+
+        <!-- Кнопки управления -->
+        <div class="action-buttons">
+          <button type="button" class="btn-reset" (click)="resetSelection()">
+            Сбросить выбор
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancel()">Отмена</button>
+        <button class="btn-primary" (click)="submit()" [disabled]="selectedSlots().length === 0">
+          Заблокировать
+        </button>
+      </div>
+    </div>
+  </div>
+}

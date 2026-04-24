@@ -1,0 +1,249 @@
+<div class="admin-page">
+  <div class="gc-toolbar card">
+    <div class="gc-toolbar-left">
+      <button mat-stroked-button type="button" (click)="today()">Сегодня</button>
+      <button mat-icon-button type="button" (click)="previousRange()" aria-label="Назад">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="nextRange()" aria-label="Вперёд">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <div class="gc-title">{{ toolbarTitle() }}</div>
+    </div>
+
+    <div class="gc-toolbar-right">
+      <mat-button-toggle-group
+        [value]="viewMode()"
+        (valueChange)="setViewMode($event)"
+        aria-label="Вид календаря"
+        class="gc-view-toggle"
+      >
+        <mat-button-toggle value="day">День</mat-button-toggle>
+        <mat-button-toggle value="week">Неделя</mat-button-toggle>
+        <mat-button-toggle value="month">Месяц</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <button mat-raised-button color="primary" type="button" (click)="openBlockDayModal()">
+        Заблокировать день
+      </button>
+    </div>
+  </div>
+
+  @if (viewMode() === 'month') {
+    <div class="calendar-grid card gc-month">
+      <div class="calendar-weekdays">
+        <div>Пн</div>
+        <div>Вт</div>
+        <div>Ср</div>
+        <div>Чт</div>
+        <div>Пт</div>
+        <div>Сб</div>
+        <div>Вс</div>
+      </div>
+
+      <div class="calendar-days">
+        @for (day of calendarDays(); track day.date) {
+          <div
+            class="calendar-day"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.today]="day.isToday"
+            [class.has-appointments]="day.appointmentCount > 0"
+            [class.is-blocked]="day.isBlocked"
+            [class.is-non-working]="day.isNonWorking"
+            (click)="selectDay(day)"
+          >
+            <div class="day-header">
+              <span class="day-number">{{ day.day }}</span>
+
+              <div class="day-markers">
+                @if (day.isNonWorking) { <span class="marker marker-off" title="Выходной"></span> }
+                @if (day.isBlocked) { <span class="marker marker-block" title="День заблокирован"></span> }
+                @if (day.appointmentCount > 0) { <span class="marker marker-apt" [title]="'Записей: ' + day.appointmentCount"></span> }
+              </div>
+            </div>
+
+            @if (day.appointments?.length) {
+              <div class="day-appointments">
+                @for (apt of day.appointments.slice(0, 2); track apt.id) {
+                  <div class="gc-event-chip" [class]="'status-' + getStatusClass(apt.status)">
+                    <span class="gc-event-time">{{ formatTimeHM(apt.appointmentTime) }}</span>
+                    <span class="gc-event-title">{{ apt.serviceTitle || apt.clientName }}</span>
+                  </div>
+                }
+                @if (day.appointments.length > 2) {
+                  <span class="more-indicator">+{{ day.appointments.length - 2 }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (viewMode() === 'day') {
+    <div class="gc-day-layout">
+      <div class="card gc-grid">
+        <div class="gc-grid-header">
+          <div class="gc-time-gutter"></div>
+          <div class="gc-days-header" [style.gridTemplateColumns]="'repeat(' + weekDays().length + ', 1fr)'">
+            @for (d of weekDays(); track trackWeekDay($index, d)) {
+              <button type="button" class="gc-day-pill" [class.today]="d.isToday" [class.non-working]="d.isNonWorking" (click)="selectDayByKey(d.dateKey)">
+                <span class="gc-day-pill-dow">{{ d.label.split(' ')[0] }}</span>
+                <span class="gc-day-pill-day">{{ d.label.split(' ')[1] }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="gc-grid-body">
+          <div class="gc-time-gutter">
+            @for (h of hourLabels(); track trackHour($index, h)) {
+              <div class="gc-hour">{{ h.label }}</div>
+            }
+          </div>
+
+          <div class="gc-days" [style.gridTemplateColumns]="'repeat(' + weekDays().length + ', 1fr)'">
+            @for (d of weekDays(); track trackWeekDay($index, d)) {
+              <div class="gc-day-col" [class.non-working]="d.isNonWorking" (dblclick)="selectDayByKey(d.dateKey)">
+                <div class="gc-day-col-grid"></div>
+
+                @if (dayStatsByKey().get(d.dateKey)?.blockedSlots?.length) {
+                  @for (b of dayStatsByKey().get(d.dateKey).blockedSlots; track b.id) {
+                    @if (!b.isFullDay) {
+                      <div
+                        class="gc-block"
+                        [style.top.px]="timeToTopPx(b.dateTime)"
+                        [style.height.px]="durationToHeightPx((b.durationHours || 0) * 60 + (b.durationMinutes || 0))"
+                        [title]="b.reason || 'Блокировка'"
+                      >
+                        <span class="gc-block-title">{{ b.reason || 'Блок' }}</span>
+                      </div>
+                    }
+                  }
+                }
+
+                @if (dayStatsByKey().get(d.dateKey)?.appointments?.length) {
+                  @for (a of dayStatsByKey().get(d.dateKey).appointments; track a.id) {
+                    <button
+                      type="button"
+                      class="gc-event"
+                      [class]="'status-' + getStatusClass(a.status)"
+                      [style.top.px]="timeToTopPx(a.appointmentTime)"
+                      [style.height.px]="durationToHeightPx(a.durationMinutes)"
+                      (click)="selectDayByKey(d.dateKey)"
+                      [title]="(a.serviceTitle || '') + ' • ' + (a.clientName || '')"
+                    >
+                      <div class="gc-event-main">
+                        <div class="gc-event-time">{{ formatTimeHM(a.appointmentTime) }}</div>
+                        <div class="gc-event-title">{{ a.serviceTitle || 'Консультация' }}</div>
+                        <div class="gc-event-sub">{{ a.clientName }}</div>
+                      </div>
+                    </button>
+                  }
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <app-day-details-panel
+        [docked]="true"
+        [isOpen]="panelOpen"
+        [selectedDate]="selectedDateForPanel()"
+        (closed)="closePanel()"
+        (blockDayRequested)="openBlockDayModalForDate($event)">
+      </app-day-details-panel>
+    </div>
+  } @else {
+    <div class="card gc-grid">
+      <div class="gc-grid-header">
+        <div class="gc-time-gutter"></div>
+        <div class="gc-days-header" [style.gridTemplateColumns]="'repeat(' + weekDays().length + ', 1fr)'">
+          @for (d of weekDays(); track trackWeekDay($index, d)) {
+            <button type="button" class="gc-day-pill" [class.today]="d.isToday" [class.non-working]="d.isNonWorking" (click)="selectDayByKey(d.dateKey)">
+              <span class="gc-day-pill-dow">{{ d.label.split(' ')[0] }}</span>
+              <span class="gc-day-pill-day">{{ d.label.split(' ')[1] }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="gc-grid-body">
+        <div class="gc-time-gutter">
+          @for (h of hourLabels(); track trackHour($index, h)) {
+            <div class="gc-hour">{{ h.label }}</div>
+          }
+        </div>
+
+        <div class="gc-days" [style.gridTemplateColumns]="'repeat(' + weekDays().length + ', 1fr)'">
+          @for (d of weekDays(); track trackWeekDay($index, d)) {
+            <div class="gc-day-col" [class.non-working]="d.isNonWorking" (dblclick)="selectDayByKey(d.dateKey)">
+              <div class="gc-day-col-grid"></div>
+
+              @if (dayStatsByKey().get(d.dateKey)?.blockedSlots?.length) {
+                @for (b of dayStatsByKey().get(d.dateKey).blockedSlots; track b.id) {
+                  @if (!b.isFullDay) {
+                    <div
+                      class="gc-block"
+                      [style.top.px]="timeToTopPx(b.dateTime)"
+                      [style.height.px]="durationToHeightPx((b.durationHours || 0) * 60 + (b.durationMinutes || 0))"
+                      [title]="b.reason || 'Блокировка'"
+                    >
+                      <span class="gc-block-title">{{ b.reason || 'Блок' }}</span>
+                    </div>
+                  }
+                }
+              }
+
+              @if (dayStatsByKey().get(d.dateKey)?.appointments?.length) {
+                @for (a of dayStatsByKey().get(d.dateKey).appointments; track a.id) {
+                  <button
+                    type="button"
+                    class="gc-event"
+                    [class]="'status-' + getStatusClass(a.status)"
+                    [style.top.px]="timeToTopPx(a.appointmentTime)"
+                    [style.height.px]="durationToHeightPx(a.durationMinutes)"
+                    (click)="selectDayByKey(d.dateKey)"
+                    [title]="(a.serviceTitle || '') + ' • ' + (a.clientName || '')"
+                  >
+                    <div class="gc-event-main">
+                      <div class="gc-event-time">{{ formatTimeHM(a.appointmentTime) }}</div>
+                      <div class="gc-event-title">{{ a.serviceTitle || 'Консультация' }}</div>
+                      <div class="gc-event-sub">{{ a.clientName }}</div>
+                    </div>
+                  </button>
+                }
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (viewMode() !== 'day') {
+    <!-- Боковая панель деталей дня -->
+    <app-day-details-panel
+      [isOpen]="panelOpen"
+      [selectedDate]="selectedDateForPanel()"
+      (closed)="closePanel()"
+      (blockDayRequested)="openBlockDayModalForDate($event)">
+    </app-day-details-panel>
+  }
+
+  <!-- Модальное окно блокировки слота -->
+  <app-block-slot-modal
+    [visible]="blockSlotModalVisible"
+    [slotData]="selectedSlotData()"
+    (closed)="closeBlockSlotModal()"
+    (saved)="onBlockSaved()">
+  </app-block-slot-modal>
+
+  <!-- Модальное окно блокировки дня -->
+  <app-block-day-modal
+    [visible]="blockDayModalVisible"
+    [date]="selectedBlockDayDate()"
+    (closed)="closeBlockDayModal()"
+    (saved)="onBlockSaved()">
+  </app-block-day-modal>
+</div>

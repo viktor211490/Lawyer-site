@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LawyerSite.Api</name>
+    </assembly>
+    <members>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.GetAvailableSlots(System.Nullable{System.DateTime},System.Int32,System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Получить доступные слоты для записи (публичный доступ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.GetAll">
+            <summary>
+            Получить все записи (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.GetCalendar(System.Int32,System.Int32)">
+            <summary>
+            Получить календарь записей на месяц (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.GetDayAppointments(System.DateTime)">
+            <summary>
+            Получить все записи на конкретный день (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.GetById(System.Int32)">
+            <summary>
+            Получить запись по ID (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.Create(LawyerSite.Application.Contracts.CreateAppointmentDto)">
+            <summary>
+            Создать запись (публичный доступ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.Update(System.Int32,LawyerSite.Application.Contracts.UpdateAppointmentDto)">
+            <summary>
+            Обновить запись (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.UpdateStatus(System.Int32,System.String)">
+            <summary>
+            Обновить статус записи (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AppointmentsController.Delete(System.Int32)">
+            <summary>
+            Удалить запись (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.GetBlogArticles">
+            <summary>
+            Получить все статьи для блога (публичный доступ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.GetById(System.Int32)">
+            <summary>
+            Получить статью по ID (публичный доступ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.GetAll">
+            <summary>
+            Получить все статьи (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.Create(LawyerSite.Application.Contracts.CreateArticleDto)">
+            <summary>
+            Создать статью (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.Update(System.Int32,LawyerSite.Application.Contracts.UpdateArticleDto)">
+            <summary>
+            Обновить статью (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.Publish(System.Int32)">
+            <summary>
+            Опубликовать статью (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.Schedule(System.Int32,System.DateTime)">
+            <summary>
+            Запланировать статью (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.ToggleVisibility(System.Int32)">
+            <summary>
+            Переключить видимость в блоге (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.Delete(System.Int32)">
+            <summary>
+            Удалить статью (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.UploadImage(LawyerSite.Api.Controllers.ArticlesController.UploadImageForm)">
+            <summary>
+            Загрузить изображение для статьи (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ArticlesController.CropBlogImages(LawyerSite.Api.Controllers.ArticlesController.CropBlogImagesRequest)">
+            <summary>
+            Сформировать обложку и промо для блога из уже загруженного изображения (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AuthController.Login(LawyerSite.Application.Contracts.LoginDto)">
+            <summary>
+            Войти в админ-панель
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AuthController.GetProfile">
+            <summary>
+            Получить текущий профиль
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.AuthController.Logout">
+            <summary>
+            Выйти из системы
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.GetAll">
+            <summary>
+            Получить все блокировки
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.GetByRange(System.String,System.String)">
+            <summary>
+            Получить блокировки по диапазону дат
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.GetDayDetails(System.String)">
+            <summary>
+            Получить блокировки и записи на день
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.Create(LawyerSite.Application.Contracts.CreateBlockedSlotDto)">
+            <summary>
+            Заблокировать слот
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.Delete(System.Int32)">
+            <summary>
+            Удалить блокировку
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.BlockedSlotsController.CheckSlot(System.DateTime)">
+            <summary>
+            Проверить, заблокирован ли слот
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ServicesController.GetServices(System.Boolean)">
+            <summary>
+            Получить все услуги (публичный доступ — только активные)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ServicesController.GetById(System.Int32)">
+            <summary>
+            Получить услугу по ID (публичный доступ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ServicesController.Create(LawyerSite.Application.Contracts.CreateServiceDto)">
+            <summary>
+            Создать услугу (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ServicesController.Update(System.Int32,LawyerSite.Application.Contracts.UpdateServiceDto)">
+            <summary>
+            Обновить услугу (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.ServicesController.Delete(System.Int32)">
+            <summary>
+            Удалить услугу (только админ)
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.GetWeek">
+            <summary>
+            Получить все рабочие часы недели
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.GetDaySchedule(System.DateTime)">
+            <summary>
+            Получить расписание на день
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.GetDaySlots(System.DateTime)">
+            <summary>
+            Получить доступные слоты на день
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.SaveWorkingHour(System.Int32,LawyerSite.Application.Contracts.SaveWorkingHourDto)">
+            <summary>
+            Сохранить рабочие часы для дня недели
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.SaveWorkingDay(System.DateTime,LawyerSite.Application.Contracts.SaveWorkingDayDto)">
+            <summary>
+            Сохранить переопределение для конкретного дня
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.DeleteWorkingDay(System.DateTime)">
+            <summary>
+            Удалить переопределение для дня
+            </summary>
+        </member>
+        <member name="M:LawyerSite.Api.Controllers.WorkingHoursController.ResetWorkingHours">
+            <summary>
+            Сбросить все рабочие часы (для отладки)
+            </summary>
+        </member>
+        <member name="T:LawyerSite.Api.JsonStringDateTimeConverter">
+            <summary>
+            Конвертер для корректной обработки DateTime из JSON
+            Фронтенд отправляет время в UTC (через Date.UTC), мы сохраняем его как есть
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>

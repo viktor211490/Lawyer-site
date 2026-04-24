@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat -ano)",
+      "Bash(findstr :4200)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(taskkill /PID 24352 /F)",
+      "Bash(npm start *)",
+      "PowerShell(Stop-Process -Id 24352 -Force -ErrorAction SilentlyContinue)",
+      "PowerShell($pid4200 = \\(Get-NetTCPConnection -LocalPort 4200 -ErrorAction SilentlyContinue\\).OwningProcess | Select-Object -First 1; if \\($pid4200\\) { Stop-Process -Id $pid4200 -Force; Write-Host \"Killed PID $pid4200\" } else { Write-Host \"Port 4200 not in use\" })",
+      "PowerShell($conn = Get-NetTCPConnection -LocalPort 4200 -ErrorAction SilentlyContinue; if \\($conn\\) { $conn | ForEach-Object { Write-Host \"PID: $\\($_.OwningProcess\\)\"; Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } } else { Write-Host \"free\" })",
+      "PowerShell(Stop-Process -Id 13124 -Force -ErrorAction SilentlyContinue)",
+      "PowerShell($proc = Start-Process -FilePath \"dotnet\" -ArgumentList \"run\",\"--project\",\"backend\\\\LawyerSite.Api\\\\LawyerSite.Api.csproj\" -WorkingDirectory \"C:\\\\Users\\\\alexe\\\\repos\\\\Lawyer-site\" -WindowStyle Hidden -PassThru; Write-Host \"Started PID $\\($proc.Id\\)\")",
+      "PowerShell(Get-Process -Id 11780 -ErrorAction SilentlyContinue | Select-Object Id, HasExited, ExitCode 2>&1; if \\(-not \\(Get-Process -Id 11780 -ErrorAction SilentlyContinue\\)\\) { Write-Host \"Process 11780 not found - may have exited\" })",
+      "PowerShell(Stop-Process -Id \\(Get-Process dotnet -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id\\) -Force -ErrorAction SilentlyContinue; Write-Host \"Stopped dotnet\")"
+    ]
+  }
+}

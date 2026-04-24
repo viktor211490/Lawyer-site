@@ -1,0 +1,104 @@
+<h2 mat-dialog-title>Перенос записи</h2>
+
+<mat-dialog-content class="content">
+  <mat-card appearance="outlined" class="info">
+    <div class="row">
+      <span class="k">Клиент</span>
+      <span class="v"><strong>{{ data.appointment.clientName }}</strong></span>
+    </div>
+    @if (getServiceTitle()) {
+      <div class="row">
+        <span class="k">Услуга</span>
+        <span class="v">{{ getServiceTitle() }}</span>
+      </div>
+    }
+    <div class="row">
+      <span class="k">Длительность</span>
+      <span class="v">{{ getServiceDuration() }} мин</span>
+    </div>
+    <div class="row">
+      <span class="k">Перерыв</span>
+      <span class="v">{{ getBreakMinutes() }} мин</span>
+    </div>
+    <div class="row">
+      <span class="k">Итого займёт</span>
+      <span class="v">{{ getTotalMinutes() }} мин</span>
+    </div>
+    <div class="row">
+      <span class="k">Текущее время</span>
+      <span class="v">{{ currentTimeLabel() }}</span>
+    </div>
+  </mat-card>
+
+  @if (error()) {
+    <mat-card appearance="outlined" class="error">
+      {{ error() }}
+    </mat-card>
+  }
+
+  <mat-horizontal-stepper [linear]="true">
+    <mat-step [completed]="canContinue()" label="Выбор слота">
+      <div class="picker">
+        @for (d of days(); track d.dateKey) {
+          <mat-card appearance="outlined" class="day">
+            <div class="day-header">{{ d.dayLabel }}</div>
+            <div class="slots">
+              @for (slot of d.slots; track slot.time) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="slot"
+                  [class.selected]="selectedSlotIso() === slot.time"
+                  [class.reserved]="slot.isReservedForSelected"
+                  [disabled]="!slot.isAvailable"
+                  (click)="selectSlot(slot)"
+                  [title]="getSlotTitle(slot)"
+                >
+                  {{ formatTime(slot.time) }}
+                </button>
+              }
+              @if (!d.slots?.length) {
+                <span class="no-slots">Нет слотов</span>
+              }
+            </div>
+          </mat-card>
+        }
+      </div>
+
+      <div class="step-actions">
+        <span></span>
+        <button mat-raised-button color="primary" matStepperNext [disabled]="!canContinue()">Далее</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="Подтверждение">
+      <mat-card appearance="outlined" class="confirm">
+        <div class="row">
+          <span class="k">Новое время</span>
+          <span class="v">
+            @if (selectedSlotIso()) { {{ getSelectedRangeLabel() }} } @else { — }
+          </span>
+        </div>
+        <div class="row">
+          <span class="k">С учётом перерыва</span>
+          <span class="v">
+            @if (selectedSlotIso()) { {{ getSelectedRangeLabelWithBreak() }} } @else { — }
+          </span>
+        </div>
+        <div class="hint">Слоты показываются по Москве. Если слот недоступен — он занят или заблокирован.</div>
+      </mat-card>
+
+      <div class="step-actions">
+        <button mat-button matStepperPrevious>Назад</button>
+        <button mat-raised-button color="primary" (click)="confirm()" [disabled]="!selectedSlotIso() || isSaving()">
+          Перенести
+        </button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="isSaving()">Закрыть</button>
+</mat-dialog-actions>
+

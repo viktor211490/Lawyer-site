@@ -1,0 +1,142 @@
+@if (!docked) {
+  <div class="panel-overlay" [class.show]="isOpen()" (click)="close()"></div>
+}
+
+<div class="day-details-panel" [class.open]="isOpen()" [class.docked]="docked">
+  <div class="panel-content">
+    <div class="panel-header">
+      <div class="panel-title">
+        <div class="title-main">День: {{ selectedDate ? formatDate(selectedDate) : '...' }}</div>
+        <div class="title-sub">Управление записями и переносами</div>
+      </div>
+
+      @if (!docked) {
+        <button mat-icon-button type="button" (click)="close()" aria-label="Закрыть">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    @if (statistics(); as stats) {
+      <div class="panel-summary">
+        <mat-chip-set class="stats-chips">
+          <mat-chip>Всего: {{ stats.totalAppointments }}</mat-chip>
+          <mat-chip>Подтверждено: {{ stats.confirmedAppointments }}</mat-chip>
+          <mat-chip>Отменено: {{ stats.cancelledAppointments }}</mat-chip>
+        </mat-chip-set>
+
+        <div class="primary-actions">
+          <button mat-stroked-button color="primary" type="button" (click)="openQuickBookingModal()" [disabled]="isDayBlocked()">
+            <mat-icon>add</mat-icon>
+            Быстрая запись
+          </button>
+
+          @if (isDayBlocked()) {
+            <button mat-stroked-button type="button" class="warn" (click)="unblockCurrentDay()">
+              <mat-icon>lock_open</mat-icon>
+              Разблокировать день
+            </button>
+          } @else {
+            <button mat-stroked-button type="button" (click)="openBlockSlotModal()">
+              <mat-icon>schedule</mat-icon>
+              Заблокировать слот
+            </button>
+          }
+
+          <button mat-stroked-button type="button" (click)="openBlockDayModal()">
+            <mat-icon>block</mat-icon>
+            Заблокировать день
+          </button>
+
+          <button mat-icon-button type="button" (click)="exportToCsv()" aria-label="Скачать CSV" class="csv-btn">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      @if (isDayBlocked()) {
+        <div class="day-blocked-warning">
+          <p>Этот день заблокирован. Записи скрыты, новые записи невозможны.</p>
+        </div>
+      }
+
+      <div class="controls">
+        <mat-button-toggle-group
+          [value]="filter()"
+          (valueChange)="filter.set($event)"
+          aria-label="Фильтр"
+          class="filter-toggle"
+        >
+          <mat-button-toggle value="all">Все</mat-button-toggle>
+          <mat-button-toggle value="scheduled">Запланировано</mat-button-toggle>
+          <mat-button-toggle value="confirmed">Подтверждено</mat-button-toggle>
+          <mat-button-toggle value="cancelled">Отменено</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Поиск</mat-label>
+          <input matInput type="text" [formControl]="searchControl" placeholder="ФИО, телефон, услуга, комментарий…" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Список записей и блокировок -->
+      <div class="appointments-list">
+        @for (item of getSortedItems(stats); track trackByFn($index, item)) {
+          @if (isAppointment(item)) {
+            <div class="appointment-item-wrapper">
+              <app-appointment-card
+                [appointment]="item"
+                (statusChanged)="onStatusChanged({ id: $event.id, status: $event.status })"
+                (deleted)="loadDayDetails()"
+                (rescheduleRequested)="openRescheduleModal($event)">
+              </app-appointment-card>
+            </div>
+          } @else if (isBlockedSlot(item)) {
+            <div class="blocked-slot-card" [class]="'reason-' + item.reason">
+              <div class="blocked-info">
+                <span class="blocked-icon">{{ getIcon(item.reason) }}</span>
+                <div>
+                  <div class="blocked-time">{{ formatTime(item.dateTime) }} - {{ formatEndTime(item) }}</div>
+                  <div class="blocked-reason">{{ getReasonName(item.reason) }}</div>
+                  @if (item.comment) {
+                    <div class="blocked-comment">{{ item.comment }}</div>
+                  }
+                </div>
+              </div>
+              <button mat-icon-button type="button" (click)="deleteBlock(item.id)" aria-label="Снять блокировку">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        }
+
+        @if (getSortedItems(stats).length === 0 && !isDayBlocked()) {
+          <div class="empty-state">
+            <p>Нет записей на этот день</p>
+            <button mat-raised-button color="primary" type="button" (click)="openQuickBookingModal()">
+              <mat-icon>add</mat-icon>
+              Быстрая запись
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="loading">Загрузка...</div>
+    }
+  </div>
+</div>
+
+<!-- Block Slot Modal -->
+<app-block-slot-modal
+  [visible]="blockSlotModalVisible"
+  [slotData]="selectedSlotData()"
+  (closed)="closeBlockSlotModal()"
+  (saved)="onBlockSaved()">
+</app-block-slot-modal>
+
+<!-- Reschedule Modal -->
+
+
+<!-- Quick Booking Modal -->
+

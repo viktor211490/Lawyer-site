@@ -1,0 +1,70 @@
+.info {
+  margin-bottom: var(--admin-space-4, 16px);
+  padding: 12px;
+  border-color: var(--admin-border, #e5e7eb);
+  background: var(--admin-surface, #fff);
+}
+
+.info-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--admin-text-muted, #64748b);
+}
+
+.info-text {
+  color: var(--admin-text-muted, #64748b);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.week-settings { overflow-x: auto; }
+.settings-table {
+  width: 100%; border-collapse: collapse;
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--admin-border, #e5e7eb); vertical-align: middle; }
+  th { background: rgba(15, 23, 42, 0.02); color: var(--admin-text-muted, #64748b); font-weight: 700; font-size: 12px; }
+  tbody tr:hover { background: rgba(15, 23, 42, 0.02); }
+}
+
+.day-name {
+  font-weight: 650;
+  color: var(--admin-text, #0f172a);
+}
+
+.time {
+  white-space: nowrap;
+}
+
+.sep {
+  display: inline-block;
+  margin: 0 6px;
+  color: var(--admin-text-muted, #64748b);
+  font-weight: 800;
+}
+
+.sel {
+  width: 84px;
+}
+
+.sel-wide {
+  width: 160px;
+}
+
+.actions-col {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.msg {
+  margin-top: var(--admin-space-4, 16px);
+  padding: 12px;
+  border-color: rgba(2, 122, 72, 0.18);
+  background: rgba(2, 122, 72, 0.08);
+  font-weight: 600;
+}
+
+.msg.err {
+  border-color: rgba(180, 35, 24, 0.18);
+  background: rgba(180, 35, 24, 0.08);
+}

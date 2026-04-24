@@ -1,72 +1,49 @@
-# Сайт частного психолога | LawyerSite
+# LawyerSite
 
-Full-stack приложение для сайта частного психолога Алексеевой Марии Викторовны с системой записи на приём, админ-панелью и блогом.
+Full-stack приложение: **ASP.NET Core Web API + Angular**.
 
-## 🚀 Технологии
+Тематика проекта: **сайт адвоката** (Алексеева Татьяна Владимировна).
 
-### Backend
-- **ASP.NET Core 10** - Web API
-- **Entity Framework Core** - ORM
-- **SQLite** - База данных
-- **JWT** - Аутентификация
-- **BCrypt** - Хэширование паролей
+## Структура репозитория
+- **`backend/`**: Clean Architecture (`Domain` / `Application` / `Infrastructure` / `Api`)
+- **`frontend/`**: Angular приложение (`frontend/LawyerSite.Web`)
+- **`docs/`**: инструкции и гайды
 
-### Frontend
-- **Angular 19** - Фронтенд фреймворк
-- **RxJS** - Реактивное программирование
-- **SCSS** - Стилизация
-- **date-fns** - Работа с датами
+## Технологии
+- **Backend**: ASP.NET Core 10, EF Core, SQLite, JWT, BCrypt, NSwag
+- **Frontend**: Angular 21, RxJS, SCSS
 
-## 📋 Функционал
+## Запуск (Dev)
 
-### Публичная часть
-- **Главная страница** - Информация о психологе, услуги, статистика
-- **Блог** - Список статей о психологии
-- **Страница статьи** - Просмотр полной статьи
-- **Запись на приём** - Календарь доступных слотов, форма записи
+### Visual Studio (F5)
+Открой `LawyerSite.slnx` и запусти `backend/LawyerSite.Api` — **поднимется API**, затем **Angular dev server**, и откроется браузер на `http://localhost:4200/`.
 
-### Админ-панель
-- **Аутентификация** - Вход по логину/паролю
-- **Календарь записей** - Просмотр записей на месяц, управление статусами
-- **Управление статьями** - Создание, редактирование, публикация статей
-- **Загрузка изображений** - Drag-and-drop загрузка картинок для статей
+### CLI
 
-## 🛠 Установка и запуск
-
-### Требования
-- .NET 10 SDK
-- Node.js 18+
-- npm 9+
-
-### Backend
+Backend:
 
 ```bash
-# Перейдите в папку backend
-cd src/LawyerSite.Api
-
-# Восстановите пакеты
-dotnet restore
-
-# Запустите сервер
+cd backend/LawyerSite.Api
 dotnet run
-
-# Backend доступен по адресу: http://localhost:5000
-# Swagger: http://localhost:5000/swagger
 ```
 
-### Frontend
+Frontend:
 
 ```bash
-# Перейдите в папку frontend
-cd src/LawyerSite.Web
-
-# Установите зависимости
+cd frontend/LawyerSite.Web
 npm install
+npm start
+```
 
-# Запустите сервер разработки
-npm run start
+## Swagger (Dev)
+- **UI**: `/api`
+- **OpenAPI json**: `/api/specification.json`
 
-# Frontend доступен по адресу: http://localhost:4200
+## Publish (Prod)
+Backend собирает Angular и копирует его в `wwwroot` при publish:
+
+```bash
+dotnet publish backend/LawyerSite.Api/LawyerSite.Api.csproj -c Release
 ```
 
 ## 🔐 Учётные данные администратора
@@ -108,20 +85,20 @@ Lawyer-site/
 └── README.md
 ```
 
-## 🎨 Цветовая палитра "Осознанность"
+## 🎨 Цветовая палитра "Юридическая"
 
 ```css
---bg-primary: #FFF9F0;      /* Воздушный крем */
---bg-secondary: #FAF3E8;
+--bg-primary: #F7F8FB;
+--bg-secondary: #FFFFFF;
 
---accent-sage: #B7C9B7;     /* Мягкий шалфей */
---accent-sage-light: #D4E2D4;
---accent-peach: #FAD5B5;    /* Теплый персик */
---accent-peach-light: #F3CFB3;
+--accent-sage: #1F3A5F;       /* основной акцент */
+--accent-sage-light: #D7E1F0; /* бордеры/фоновые акценты */
+--accent-peach: #C6A15B;      /* вторичный акцент */
+--accent-peach-light: #EAD9B9;
 
---text-primary: #2F3E2F;    /* Глубокий лесной */
---text-secondary: #4A5A4A;
---text-muted: #6A7A6A;
+--text-primary: #101828;
+--text-secondary: #344054;
+--text-muted: #667085;
 ```
 
 ## 📡 API Endpoints
@@ -240,7 +217,7 @@ Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.0
 
 ```bash
 # Перейдите в папку проекта API
-cd c:\Users\alexe\repos\Psycho-site\src\LawyerSite.Api
+cd backend/LawyerSite.Api
 
 # Создайте миграцию
 dotnet ef migrations add <ИмяМиграции>
@@ -361,6 +338,7 @@ npm run build
 
 ## 👤 Контакты
 
-- **Психолог:** Алексеева Мария Викторовна
-- **Email:** info@lawyer-site.ru
-- **Телефон:** +7 (999) 123-45-67
+- **Адвокат:** Алексеева Татьяна Владимировна
+- **Адрес:** г. Симферополь, ул. Битакская, 88
+- **Телефон:** +7 9787904690
+- **Email:** alexeevaadv.gmail.com

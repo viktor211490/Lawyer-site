@@ -1,0 +1,82 @@
+<admin-page-header title="Услуги">
+  <div adminHeaderActions>
+    <button mat-raised-button color="primary" type="button" (click)="openCreateModal()">
+      Добавить услугу
+    </button>
+  </div>
+</admin-page-header>
+
+<admin-action-toolbar>
+  <div class="toolbar-left">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Поиск</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Название или описание" />
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="toggleActiveFilter()">
+      <mat-icon aria-hidden="true">{{ showActiveOnly() ? 'filter_alt' : 'filter_alt_off' }}</mat-icon>
+      Только активные
+    </button>
+  </div>
+
+  <div class="toolbar-right">
+    <span class="count">Всего: {{ filteredServices().length }}</span>
+  </div>
+</admin-action-toolbar>
+
+@if (filteredServices().length === 0) {
+  <admin-empty-state
+    title="Нет услуг"
+    description="Создайте первую услугу, чтобы она стала доступна для записи."
+    icon="sell"
+  >
+    <button mat-raised-button color="primary" type="button" (click)="openCreateModal()">Добавить услугу</button>
+  </admin-empty-state>
+} @else {
+  <div class="table card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Описание</th>
+          <th class="num">Длительность</th>
+          <th class="num">Стоимость</th>
+          <th>Статус</th>
+          <th class="actions-col">Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (service of filteredServices(); track service.id) {
+          <tr>
+            <td class="title-cell">
+              <span class="service-emoji">{{ getServiceEmoji(service) }}</span>
+              {{ service.title }}
+            </td>
+            <td class="description-cell">{{ service.description || '—' }}</td>
+            <td class="num">{{ service.durationMinutes }} мин</td>
+            <td class="num">{{ service.price | number:'1.0-0':'ru' }} ₽</td>
+            <td>
+              <admin-status-pill [label]="service.isActive ? 'Активна' : 'Неактивна'" [tone]="service.isActive ? 'success' : 'neutral'"></admin-status-pill>
+            </td>
+            <td class="actions-cell">
+              <button mat-icon-button type="button" (click)="editService(service)" matTooltip="Редактировать">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                (click)="toggleActive(service)"
+                [matTooltip]="service.isActive ? 'Деактивировать' : 'Активировать'"
+              >
+                <mat-icon>{{ service.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="deleteService(service)" matTooltip="Удалить">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

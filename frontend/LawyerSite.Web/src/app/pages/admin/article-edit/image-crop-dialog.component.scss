@@ -1,0 +1,26 @@
+.content {
+  display: grid;
+  gap: 12px;
+}
+
+.subtitle {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--admin-text-muted, #64748b);
+}
+
+.canvas {
+  width: min(820px, 100%);
+  height: 520px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--admin-border, #e5e7eb);
+  border-radius: var(--admin-radius-md, 14px);
+  background: rgba(15, 23, 42, 0.02);
+}
+
+.canvas img {
+  display: block;
+  max-width: 100%;
+}
+

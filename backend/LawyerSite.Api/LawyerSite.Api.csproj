@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <!-- SPA Proxy Settings (Dev) -->
+    <SpaRoot>..\..\frontend\LawyerSite.Web</SpaRoot>
+    <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
+    <SpaProxyServerUrl>http://localhost:4200</SpaProxyServerUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.7.0" />
+    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LawyerSite.Application\LawyerSite.Application.csproj" />
+    <ProjectReference Include="..\LawyerSite.Infrastructure\LawyerSite.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <Target Name="BuildFrontend" BeforeTargets="Publish">
+    <Message Text="Building Angular frontend..." Importance="high" />
+    <Exec WorkingDirectory="..\..\frontend\LawyerSite.Web" Command="npm install --no-audit --no-fund" />
+    <Exec WorkingDirectory="..\..\frontend\LawyerSite.Web" Command="npm run build -- --configuration production" />
+  </Target>
+
+  <Target Name="CopyFrontendToPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <FrontendDistFiles Include="..\..\frontend\LawyerSite.Web\dist\lawyer-site-web\browser\**\*" />
+    </ItemGroup>
+
+    <RemoveDir Directories="$(PublishDir)wwwroot" />
+    <MakeDir Directories="$(PublishDir)wwwroot" />
+    <Copy SourceFiles="@(FrontendDistFiles)" DestinationFolder="$(PublishDir)wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

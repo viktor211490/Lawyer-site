@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--admin-space-4, 16px);
+  flex-wrap: wrap;
+  padding: var(--admin-space-3, 12px) var(--admin-space-4, 16px);
+  border: 1px solid var(--admin-border, #e5e7eb);
+  background: var(--admin-surface, #fff);
+  border-radius: var(--admin-radius-md, 14px);
+  box-shadow: var(--admin-shadow-sm, none);
+  margin-bottom: var(--admin-space-4, 16px);
+}
+

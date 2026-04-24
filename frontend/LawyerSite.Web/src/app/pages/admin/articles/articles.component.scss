@@ -1,0 +1,98 @@
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search {
+  width: min(420px, 100%);
+}
+
+.status {
+  width: min(240px, 100%);
+}
+
+.count {
+  color: var(--admin-text-muted, #64748b);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.table {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--admin-border, #e5e7eb);
+    vertical-align: middle;
+  }
+
+  th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--admin-text-muted, #64748b);
+    background: rgba(15, 23, 42, 0.02);
+  }
+
+  tbody tr:hover {
+    background: rgba(15, 23, 42, 0.02);
+  }
+
+  .title {
+    font-weight: 650;
+    color: var(--admin-text, #0f172a);
+  }
+
+  .date {
+    font-variant-numeric: tabular-nums;
+    color: var(--admin-text-muted, #64748b);
+    white-space: nowrap;
+  }
+
+  .visibility {
+    white-space: nowrap;
+  }
+
+  .vis-label {
+    margin-left: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--admin-text-muted, #64748b);
+  }
+
+  td.visibility button[mat-icon-button] {
+    vertical-align: middle;
+  }
+
+  td.visibility mat-progress-spinner {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .actions-col {
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .actions {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+}
